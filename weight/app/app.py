@@ -6,6 +6,7 @@ app = Flask(__name__)
 def home():
     return "Flask app - Blue Weight Team"
 
+
 @app.route("/health", methods=['GET'])
 def health():
     return Response('<h1>200 OK<h1>')
