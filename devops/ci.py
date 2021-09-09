@@ -10,7 +10,7 @@ def health():
 def github_webhook_endpoint():
 
   data = request.get_json()
-        
+#  print(data.get("ref"))
   return str(data.get("repository").get("name"))
 
 if __name__ == "__main__":
