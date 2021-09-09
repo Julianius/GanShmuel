@@ -8,7 +8,7 @@ def home():
 
 @app.route("/health", methods=['GET'])
 def health():
-    return Response('<h1>200 OK<h1>'+'\nDatabase check missing')
+    return Response('<h1>200 OK<h1>')
 
 if __name__ == '__main__':
     app.run(debug=True)
