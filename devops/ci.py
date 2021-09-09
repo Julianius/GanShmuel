@@ -1,4 +1,5 @@
 from flask import Flask, request, json
+import os
 
 app = Flask(__name__)
 
@@ -10,8 +11,10 @@ def health():
 def github_webhook_endpoint():
 
   data = request.get_json()
-        
-  return str(data.get("repository").get("name"))
+  branch_name = data.get("ref").split("/")[-1] 
+
+  os.system('git clone "https://github.com/Julianius/GanShmuel" origin ' + branch_name) 
+  return "OK"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
