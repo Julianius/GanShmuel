@@ -1,5 +1,24 @@
 from flask import Flask, render_template,request
 from flask import Response
+import mysql.connector
+
+ifconnect = False
+try:
+    billingdb = mysql.connector.connect(
+    host="billingdb",
+    user="root",
+    password="1234!",
+    )
+    mycursor = billingdb.cursor()
+    mycursor.execute("select 1")
+    myresult = mycursor.fetchall()
+    print(myresult)
+    print("connected")
+    billingdb.commit()
+    ifconnect = True
+except:
+    print("cant connect to db")
+    ifconnect = False
 
 
 app = Flask(__name__)
@@ -10,7 +29,10 @@ def index():
 
 @app.route('/health')
 def health():
-    return "OK"
+    if ifconnect == True:
+        return f"OK, Can connect to DB, and Select 1 = {myresult}"
+    else:
+        return "Cant connect to DB"
 
 
 if __name__ == '__main__':
