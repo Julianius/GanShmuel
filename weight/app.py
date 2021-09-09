@@ -11,4 +11,4 @@ def health():
     return Response('<h1>200 OK<h1>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
