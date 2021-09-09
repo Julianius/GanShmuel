@@ -13,7 +13,7 @@ def github_webhook_endpoint():
   data = request.get_json()
   branch_name = data.get("ref").split("/")[-1] 
 
-  os.system('git clone "https://github.com/Julianius/GanShmuel" origin ' + branch_name) 
+  os.system('git fetch origin ' + branch_name) 
   return "OK"
 #asdasdasd
 if __name__ == "__main__":
