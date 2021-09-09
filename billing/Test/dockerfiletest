@@ -1,0 +1,8 @@
+FROM ubuntu:latest
+RUN apt-get update && apt-get upgrade
+RUN apt-get install vim -y
+RUN apt-get install python3-flask -y
+COPY . /billingserver
+WORKDIR /billingserver
+EXPOSE 8081
+ENTRYPOINT python3 billing.py
