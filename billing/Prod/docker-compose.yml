@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  billingdb: 
+    container_name: billingdb
+    hostname: billingdb
+    image: mysql:8.0.26
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234!
+
+  billingapp:
+    container_name: billingapp
+    hostname: billingapp
+    build: .
+    volumes:
+      - . :/webserver/blabla/blabla
+    ports:
+      - 8081:8081
+    depends_on:
+      - "billingdb"
+
+
+    
+
+

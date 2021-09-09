@@ -12,12 +12,9 @@ try:
     mycursor = billingdb.cursor()
     mycursor.execute("select 1")
     myresult = mycursor.fetchall()
-    print(myresult)
-    print("connected")
     billingdb.commit()
     ifconnect = True
 except:
-    print("cant connect to db")
     ifconnect = False
 
 
@@ -30,9 +27,9 @@ def index():
 @app.route('/health')
 def health():
     if ifconnect == True:
-        return f"OK, Can connect to DB, and Select 1 = {myresult}"
+        return Response({"Ok"},status=200)
     else:
-        return "Cant connect to DB"
+        return Response({"Internal server error"},status=500)
 
 
 if __name__ == '__main__':
