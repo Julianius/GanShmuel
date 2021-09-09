@@ -7,7 +7,7 @@ services:
   mysql:
     image: mysql:8
     volumes: 
-      - "./mysql-db:/var/lib/mysql"
+      - "./mysql-db/one-db.sql:/docker-entrypoint-initdb.d/one-db.sql"
     environment: 
       - MYSQL_ROOT_PASSWORD=123456
 
