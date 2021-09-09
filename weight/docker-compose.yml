@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  weight:
+    build: ./app
+    ports: 
+      - "5001:5000"
+  mysql:
+    image: mysql:8
+    volumes: 
+      - "./mysql-db:/var/lib/mysql"
+    environment: 
+      - MYSQL_ROOT_PASSWORD=123456
+
+  
