@@ -12,7 +12,7 @@ def github_webhook_endpoint():
 
   data = request.get_json()
   branch_name = data.get("ref").split("/")[-1] 
-
+  os.system('git checkout main') 
   os.system('git fetch origin ' + branch_name) 
   return "OK"
 
