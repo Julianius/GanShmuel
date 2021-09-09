@@ -5,31 +5,22 @@ services:
   billingdb: 
     container_name: billingdb
     hostname: billingdb
-    image: ubuntu:latest
-    volumes:
-      - /home/raviv/Videos/chat:/webserver/chat
-
+    image: mysql:8.0.26
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234!
 
   billingapp:
     container_name: billingapp
     hostname: billingapp
-    image: ubuntu:latest
+    build: .
     volumes:
-      - $pwd:/webserver/billing
+      - . :/webserver/blabla/blabla
     ports:
       - 8081:8081
     depends_on:
       - "billingdb"
 
-    
-  billingdb:
-    container_name: chat2
-    hostname: chat2
-    image: chat:latest
-    volumes:
-      - /home/raviv/Videos/chat:/webserver/chat
-    depends_on:
-      - "chat1"
+
     
 
 
