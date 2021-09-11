@@ -1,13 +1,28 @@
-from flask import Flask, request, json
+from flask import Flask, request
 import os, os.path
-import subprocess
 
 app = Flask(__name__)
 
-BRANCHES = set(('weight-staging', 'billing-staging', 'main'))
-PORTS = { 'devops-production': '8080', 'billing-staging': '8081', 'billing-production': '8082', 'weight-staging': '8083', 'weight-production': '8084' }
+BRANCHES = set(['main', 'weight-staging', 'billing-staging'])
 REPO = 'https://github.com/Julianius/GanShmuel.git'
-#PATHS = { 'local': '/home/julian/GanShmuel/', 'remote': '/home/ec2-user/GanShmuel/' }
+PATH = '/GanShmuel/app/'
+
+def build_app(branch_name):
+  if branch_name in BRANCHES:
+    print(branch_name)
+    if branch_name == list(BRANCHES)[0]:
+      os.system('git clone ' + REPO + ' ' + PATH + '/temp')
+    else:
+       os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + '/temp')
+    
+    if os.path.exists(PATH + branch_name):
+      os.system('rm -rf ' + PATH + branch_name)
+    
+    os.system('mkdir -p ' + PATH + branch_name)
+    os.system('mv '+ PATH + 'temp/* ' + PATH + 'temp/.* ' + PATH + branch_name + '/ 2>/dev/null')
+    os.system('rm -rf ' + PATH + 'temp')
+    os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml up -d --force-recreate')
+
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -16,36 +31,9 @@ def health():
 @app.route("/myhook", methods=['POST'])
 def github_webhook_endpoint():
 
-  # Check the os type to ensure that it is local or remote
-  os_type_cmd='cat /etc/os-release | grep NAME | head -n 1 | cut -d \\" -f 2'
-  OS_TYPE = subprocess.check_output(os_type_cmd, shell=True)
-  print(OS_TYPE)
-  if 'Ubuntu' in str(OS_TYPE):
-    path = 'local'
-  else:
-    path = 'remote'  
-  #path = PATHS.get(path)
-  path = '/GanShmuel'
   data = request.get_json()
   branch_name = data.get('ref').split('/')[-1] 
-
-  #os.system('cat /etc/os/release')
-
-
-
-  
-  if branch_name in BRANCHES:
-    if branch_name == 'main':
-      os.system('git clone ' + REPO + ' ' + path + '/temp')
-      if os.path.exists(path + 'main-production'):
-        os.system('mv '+ path + 'temp/.git ' + path + 'main-production/.git')
-      else:
-        os.system('mkdir -p ' + path + 'main-production')
-        os.system('mv '+ path + 'temp/* ' + path + 'temp/.* ' + path + 'main-production/ 2>/dev/null')
-      os.system('rm -rf ' + path + 'temp')
-      os.system('docker-compose -f /GanShmuel/apps/billing-staging/GanShmuel/billing/Prod/docker-compose.yml up -d --force-recreate')
-    else:
-      print('b')
+  build_app(branch_name)
 
   return "OK"
 
