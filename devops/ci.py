@@ -43,7 +43,7 @@ def github_webhook_endpoint():
         os.system('mkdir -p ' + path + 'main-production')
         os.system('mv '+ path + 'temp/* ' + path + 'temp/.* ' + path + 'main-production/ 2>/dev/null')
       os.system('rm -rf ' + path + 'temp')
-      os.system('docker-compose -f ' + path + 'main-production/billing/docker-compose.yml up -d --force-recreate')
+      os.system('docker-compose -f ' + path + 'main-production/weight/docker-compose.yml up -d --force-recreate')
     else:
       print('b')
 
