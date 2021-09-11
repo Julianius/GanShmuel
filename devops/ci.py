@@ -30,8 +30,9 @@ def health():
 
 @app.route("/myhook", methods=['POST'])
 def github_webhook_endpoint():
-
+  
   data = request.get_json()
+  print(str(data))
   branch_name = data.get('ref').split('/')[-1] 
   build_app(branch_name)
 
