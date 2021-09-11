@@ -30,8 +30,9 @@ def health():
 
 @app.route("/myhook", methods=['POST'])
 def github_webhook_endpoint():
-
+  
   data = request.get_json()
+  print(str(data))
   branch_name = data.get('ref').split('/')[-1] 
   build_app(branch_name)
 
@@ -39,4 +40,3 @@ def github_webhook_endpoint():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
-    ###
