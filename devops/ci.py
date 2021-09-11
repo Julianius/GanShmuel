@@ -4,14 +4,15 @@ import re
 
 app = Flask(__name__)
 
-BRANCHES = set(['main', 'weight-staging', 'billing-staging'])
+BRANCHES_ALLOWED = set(['main', 'weight-staging', 'billing-staging'])
+BRANCHES_FORBIDDEN = set(['devops', 'weight', 'billing'])
 REPO = 'https://github.com/Julianius/GanShmuel.git'
 PATH = '/GanShmuel/app/'
 
 def build_app(branch_name, merger_name):
-  if branch_name in BRANCHES:
+  if branch_name in BRANCHES_ALLOWED and merger_name not in BRANCHES_FORBIDDEN:
     print(branch_name)
-    if branch_name == list(BRANCHES)[0]:
+    if branch_name == list(BRANCHES_ALLOWED)[0]:
       os.system('git clone ' + REPO + ' ' + PATH + 'temp')
     else:
        os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + 'temp')
@@ -23,12 +24,12 @@ def build_app(branch_name, merger_name):
     os.system('mv '+ PATH + 'temp/* ' + PATH + 'temp/.* ' + PATH + branch_name + '/ 2>/dev/null')
     os.system('rm -rf ' + PATH + 'temp')
 
-    if branch_name == list(BRANCHES)[0]:
-      if merger_name == list(BRANCHES)[1]:
+    if branch_name == list(BRANCHES_ALLOWED)[0]:
+      if merger_name == list(BRANCHES_ALLOWED)[1]:
         os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml up -d --force-recreate')
       else:
         os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml up -d --force-recreate')
-    elif branch_name == list(BRANCHES)[1]:
+    elif branch_name == list(BRANCHES_ALLOWED)[1]:
         os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml up -d --force-recreate')
     else:
         os.system('docker-compose -f ' + PATH + branch_name + '/billing/Test/docker-compose.yml up -d --force-recreate')
