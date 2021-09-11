@@ -32,7 +32,8 @@ def health():
 def github_webhook_endpoint():
   
   data = request.get_json()
-  print(str(data))
+  #print(str(data))
+  print(data.get('head_commit').get('message'))
   branch_name = data.get('ref').split('/')[-1] 
   build_app(branch_name)
 
