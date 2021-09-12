@@ -1,4 +1,4 @@
 flask
 MySQL-connector-python
 requests
-xlrd
+openpyxl
