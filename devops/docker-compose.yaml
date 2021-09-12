@@ -8,4 +8,3 @@ services:
       - /home/julian/GanShmuel:/GanShmuel/app
     ports: 
      - "8080:5000"
-    
