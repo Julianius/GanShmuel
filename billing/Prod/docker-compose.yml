@@ -16,7 +16,7 @@ services:
     volumes:
       - . :/webserver/blabla/blabla
     ports:
-      - 8081:8081
+      - ${DYNAMIC_PORT}:8081
     depends_on:
       - "billingdb"
 

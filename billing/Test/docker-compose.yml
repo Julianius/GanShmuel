@@ -7,7 +7,7 @@ services:
     hostname: billingdb
     image: mysql:8.0.26
     ports:
-            - "3306"
+      - "3306"
     environment:
       MYSQL_ROOT_PASSWORD: 1234!
     healthcheck:
@@ -20,9 +20,9 @@ services:
     hostname: billingapp
     build: .
     volumes:
-      - . :/webserver/blabla/blabla
+      - ./rates:/in
     ports:
-      - 8081:8081
+      - ${DYNAMIC_PORT}:8081
     depends_on:
       - "billingdb"
 
