@@ -132,6 +132,15 @@ def trucks():
             return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain')
 
     elif request.method == 'GET':
+        billingdb = mysql.connector.connect(
+            host="billingdb",
+            user="root",
+            password="1234!",
+            database='billdb',
+        )
+        cursor = billingdb.cursor()
+        cursor.execute("USE billdb")
+        cursor.execute(f"SELECT id FROM Provider")
         return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
 
 
