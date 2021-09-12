@@ -12,7 +12,7 @@ services:
   
   mysql:
     image: mysql:8
-    container_name: mysql_db_weight
+    #container_name: mysql_db_weight
     volumes: 
       - "./mysql-db/one-db.sql:/docker-entrypoint-initdb.d/one-db.sql"
     environment: 

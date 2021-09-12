@@ -15,10 +15,13 @@ class mysql_db(object):
 
 	def getData(self,querry):
 		connected = self.doConnect()
-		data = []
 		cur = connected.cursor(dictionary=True, buffered=True)
 		cur.execute(querry)
-		results = cur.fechall()
+		results = cur.fetchall()
 		return results
 
-		
+	def setData(self, query, data):
+		connected = self.doConnect()
+		cursor = connected.cursor()
+		cursor.execute(query, data)
+		connected.commit()
