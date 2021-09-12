@@ -10,11 +10,11 @@ class mysql_db(object):
 
 	def doConnect(self):
 		if self.connections is None:
-			self.connections = mysql.connector.connect(user='root', password='123456', host='mysql', database='mysql_db')
+			self.connections = mysql.connector.connect(user='root', password='123456', host='mysql_db', database='db')
 		return self.connections
 
 	def getData(self,querry):
-		connected = self.doConnect
+		connected = self.doConnect()
 		data = []
 		cur = connected.cursor(dictionary=True, buffered=True)
 		res = cur.execute(querry)

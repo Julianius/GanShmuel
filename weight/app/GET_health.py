@@ -13,4 +13,7 @@ def GET_health():
 			result = f"service {service} : {status_code} server error"
 			return result
 		else:
-			return "200 ok"
+			result = ""
+			for service in services:
+				result += f"Service {service} ... ok"
+			return result

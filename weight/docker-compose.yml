@@ -14,5 +14,9 @@ services:
       - "./mysql-db/one-db.sql:/docker-entrypoint-initdb.d/one-db.sql"
     environment: 
       - MYSQL_ROOT_PASSWORD=123456
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   
