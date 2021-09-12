@@ -5,7 +5,7 @@ class mysql_db(object):
 		self.db_user = "root"
 		self.db_pass = "123456"
 		self.db_host = "mysql"
-		self.db_name = "mysql_db"
+		self.db_name = "db"
 		self.connections = None
 
 	def doConnect(self):
@@ -18,3 +18,4 @@ class mysql_db(object):
 		data = []
 		cur = connected.cursor(dictionary=True, buffered=True)
 		res = cur.execute(querry)
+		
