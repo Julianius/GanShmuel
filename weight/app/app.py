@@ -1,3 +1,5 @@
+
+from POST_batch_weight import POST_batch_weight
 from flask import Flask, Response, request
 import requests
 from GET_health import GET_health
@@ -16,7 +18,6 @@ def home():
 def health():
     print("hhhh")
     return GET_health()
-    #return Response('<h1>200 OK<h1>')
 
 @app.route("/unknown", methods=['GET'])
 def unknown_weight():
@@ -29,6 +30,9 @@ def weight_weight():
     filter = request.args.get('filter')
     return f"{fromTime} {toTime} {filter}"
     # return GET_weight()
+@app.route("/batch-weight/<file>", methods=['POST', 'GET'])
+def batch_weight(file):
+    return POST_batch_weight(file)
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
