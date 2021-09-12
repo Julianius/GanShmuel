@@ -20,7 +20,7 @@ services:
     volumes:
       - ./rates:/in
     ports:
-      - ${DYNAMIC_PORT}:8081
+      - 8081:8081
     depends_on:
       - "billingdb"
 

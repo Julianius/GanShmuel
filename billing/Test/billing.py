@@ -1,14 +1,17 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask import Response
 import mysql.connector
 import json
 import requests
+import random
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
     return "Welcome to Billing Blue Site"
+
 
 @app.route('/health')
 def health():
@@ -17,18 +20,16 @@ def health():
     else:
         return Response({"Internal server error"}, status=500)
 
+
 @app.route('/provider')
 def provider():
     return render_template('providers.html')
 
-@app.route('/provider', methods=['GET', 'POST'])
+
+@app.route('/api/provider', methods=['GET', 'POST'])
 def providers():
     if request.method == 'POST':
         provider = request.form['provider']
-        provid = request.form["provid"]
-        jsonprovider = {"id": provid, "name": provider}
-        with open(f"./templates/providerjson.json", "a+") as chat_file:
-            chat_file.write(str(jsonprovider))
         billingdb = mysql.connector.connect(
             host="billingdb",
             user="root",
@@ -37,14 +38,59 @@ def providers():
         )
         mycursor = billingdb.cursor()
         mycursor.execute("USE billdb")
-        # mycursor.execute(f"SELECT 'name' FROM Provider")
-        # result = mycursor.fetchone()
-        # if provider not in result:
-        mycursor.execute(f"INSERT INTO Provider(id, name) VALUES('{str(provid)}', '{str(provider)}')")
-        return requests.post('localhost:8081/provider', json={'id': 1, 'name': ''})
+        mycursor.execute(f"SELECT name from Provider where name='{str(provider)}'")
+        results = mycursor.fetchall()
+        if not results:
+            switch = True
+            while switch:
+                prov_id = random.randint(1, 999999)
+                jsonprovider = {'id': str(prov_id), 'name': str(provider)}
+                try:
+                    mycursor.execute("USE billdb")
+                    mycursor.execute(f"INSERT INTO Provider(id, name) VALUES('{str(prov_id)}', '{str(provider)}')")
+                    switch = False
+                except mysql.connector.errors.IntegrityError:
+                    continue
+                    return Response('id exist', status=400)
+                except:
+                    return Response('error', status=400)
+                return jsonify(jsonprovider)
+        else:
+            return Response('name exist', status=400)
+    elif request.method == 'GET':
+        return Response("enter provider name:", mimetype='text/plain')
+
+
+@app.route('/trucks')
+def truck():
+    return render_template('trucks.html')
+
+
+@app.route('/api/trucks', methods=['GET', 'POST', 'PUT'])
+def trucks():
+    if request.method == 'POST':
+        prov_id = request.form['Provider-Id']
+        truck_id = request.form['Truck-Id']
+        billingdb = mysql.connector.connect(
+            host="billingdb",
+            user="root",
+            password="1234!",
+            database='billdb',
+        )
+        cursor = billingdb.cursor()
+        cursor.execute("USE billdb")
+        cursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
+        results = cursor.fetchall()
+        if results:
+            cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
+            return Response("Ok", mimetype='text/plain')
+        else:
+            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain')
 
     elif request.method == 'GET':
-        return Response({"enter"}, mimetype='text/plain')
+        return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
+
+
 
 if __name__ == '__main__':
     ifconnect = False
