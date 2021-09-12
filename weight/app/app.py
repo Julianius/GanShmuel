@@ -2,6 +2,9 @@ from flask import Flask, Response, request
 import requests
 from GET_health import GET_health
 from GET_unknown import GET_unknown
+from GET_weight import GET_weight
+from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -11,12 +14,21 @@ def home():
 
 @app.route("/health", methods=['GET'])
 def health():
+    print("hhhh")
     return GET_health()
     #return Response('<h1>200 OK<h1>')
 
 @app.route("/unknown", methods=['GET'])
 def unknown_weight():
     return GET_unknown()
+
+@app.route("/weight", methods=['GET'])
+def weight_weight():
+    fromTime = request.args.get('from') if request.args.get('from') else "000000"
+    toTime = request.args.get('to') if request.args.get('to') else datetime.now().strftime("%Y%m%d%H%M%S")
+    filter = request.args.get('filter')
+    return f"{fromTime} {toTime} {filter}"
+    # return GET_weight()
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

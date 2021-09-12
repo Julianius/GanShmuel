@@ -1,6 +1,6 @@
 from mysql_db import mysql_db
 
-def GET_unknown():
+def GET_weight():
 	mySQL = mysql_db()
 
 	try:
@@ -8,6 +8,5 @@ def GET_unknown():
 		info = mySQL.getData("SELECT distinct id FROM containers WHERE weight IS NULL")		
 		return '\n'.join(map(str,info))
 		
-	except Exception as e:	
-		print(e)
+	except:		
 		return "Weight data is ok"
