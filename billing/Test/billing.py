@@ -4,6 +4,8 @@ import mysql.connector
 import json
 import requests
 import random
+import os 
+import openpyxl
 
 app = Flask(__name__)
 
@@ -24,6 +26,15 @@ def health():
 @app.route('/provider')
 def provider():
     return render_template('providers.html')
+
+@app.route('/rates')
+def rates():
+    mydir = os.listdir("/in")
+    return render_template('rates.html',mydir=mydir)
+
+@app.route('/trucks')
+def truck():
+    return render_template('trucks.html')
 
 
 @app.route('/api/provider', methods=['GET', 'POST'])
@@ -61,10 +72,43 @@ def providers():
         return Response("enter provider name:", mimetype='text/plain')
 
 
-@app.route('/trucks')
-def truck():
-    return render_template('trucks.html')
-
+@app.route('/api/rates', methods=['POST','GET'])
+def ratespost():
+    if request.method == 'GET':
+        mycursor = billingdb.cursor()
+        mycursor.execute("""select * from Rates""")
+        row_headers=[x[0] for x in mycursor.description] 
+        rv = mycursor.fetchall()
+        json_data=[]
+        for result in rv:
+            json_data.append(dict(zip(row_headers,result)))
+        jsonout = json.dumps(json_data) 
+        return jsonout
+    if request.method == 'POST':
+        mycursor = billingdb.cursor()
+        filename = request.form['msgfile']
+        wrkbk = openpyxl.load_workbook(f"/in/{filename}")
+        sh = wrkbk.active
+        semilist = []
+        mylist = []
+        for i in range(2, sh.max_row+1):
+            mylist.append(semilist)
+            semilist=[]
+            for j in range(1, sh.max_column+1):
+                cell_obj = sh.cell(row=i, column=j)
+                semilist.append(str(cell_obj.value))
+        mylist.pop(0)
+        for i in mylist:
+            try:
+                mycursor.execute(f"""SELECT * FROM Rates WHERE product_id LIKE "{i[0]}" """)
+                myresult = mycursor.fetchall()
+                if myresult != []:
+                    mycursor.execute(f"""UPDATE Rates SET rate={i[1]} WHERE product_id="{i[0]}" """)
+                else:
+                    mycursor.execute(f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
+            except:
+                print("something went wrong check it")
+        return "hello"
 
 @app.route('/api/trucks', methods=['GET', 'POST', 'PUT'])
 def trucks():
@@ -93,23 +137,23 @@ def trucks():
 
 
 if __name__ == '__main__':
-    ifconnect = False
-    billingdb = mysql.connector.connect(
-        host="billingdb",
-        user="root",
-        password="1234!",
-    )
-    mycursor = billingdb.cursor()
-    mycursor.execute("CREATE DATABASE IF NOT EXISTS billdb")
-    mycursor.execute("USE billdb")
-    mycursor.execute(
-        "CREATE TABLE IF NOT EXISTS Provider (id int(11) NOT NULL AUTO_INCREMENT,name varchar(255) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=MyISAM  AUTO_INCREMENT=10001")
-    mycursor.execute(
-        "CREATE TABLE IF NOT EXISTS Rates (product_id varchar(50) NOT NULL,rate int(11) DEFAULT 0,scope varchar(50) DEFAULT NULL,FOREIGN KEY (scope) REFERENCES Provider (id)) ENGINE=MyISAM")
-    mycursor.execute(
-        "CREATE TABLE IF NOT EXISTS Trucks (id varchar(10) NOT NULL,provider_id int(11) DEFAULT NULL,PRIMARY KEY (id),FOREIGN KEY (provider_id) REFERENCES Provider (id)) ENGINE=MyISAM")
-
     try:
+        ifconnect = False
+        billingdb = mysql.connector.connect(
+            host="billingdb",
+            user="root",
+            password="1234!",
+        )
+        mycursor = billingdb.cursor()
+        mycursor.execute("CREATE DATABASE IF NOT EXISTS billdb")
+        mycursor.execute("USE billdb")
+        mycursor.execute(
+            "CREATE TABLE IF NOT EXISTS Provider (id int(11) NOT NULL AUTO_INCREMENT,name varchar(255) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=MyISAM  AUTO_INCREMENT=10001")
+        mycursor.execute(
+            "CREATE TABLE IF NOT EXISTS Rates (product_id varchar(50) NOT NULL,rate int(11) DEFAULT 0,scope varchar(50) DEFAULT NULL,FOREIGN KEY (scope) REFERENCES Provider (id)) ENGINE=MyISAM")
+        mycursor.execute(
+            "CREATE TABLE IF NOT EXISTS Trucks (id varchar(10) NOT NULL,provider_id int(11) DEFAULT NULL,PRIMARY KEY (id),FOREIGN KEY (provider_id) REFERENCES Provider (id)) ENGINE=MyISAM")
+        
         myresult = mycursor.fetchall()
         billingdb.commit()
         ifconnect = True
