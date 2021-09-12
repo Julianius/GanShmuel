@@ -1,2 +1,3 @@
 flask
 MySQL-connector-python
+requests
