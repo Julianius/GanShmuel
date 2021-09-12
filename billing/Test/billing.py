@@ -26,8 +26,8 @@ def provider():
     return render_template('providers.html')
 
 
-@app.route('/api/<room>', methods=['GET','POST'])
-def providers(room):
+@app.route('/api/provider', methods=['GET', 'POST'])
+def providers():
     if request.method == 'POST':
         provider = request.form['provider']
         billingdb = mysql.connector.connect(
@@ -43,7 +43,7 @@ def providers(room):
         if not results:
             switch = True
             while switch:
-                prov_id=random.randint(1,999999)
+                prov_id = random.randint(1, 999999)
                 jsonprovider = {'id': str(prov_id), 'name': str(provider)}
                 try:
                     mycursor.execute("USE billdb")
@@ -59,6 +59,38 @@ def providers(room):
             return Response('name exist', status=400)
     elif request.method == 'GET':
         return Response("enter provider name:", mimetype='text/plain')
+
+
+@app.route('/trucks')
+def truck():
+    return render_template('trucks.html')
+
+
+@app.route('/api/trucks', methods=['GET', 'POST', 'PUT'])
+def trucks():
+    if request.method == 'POST':
+        prov_id = request.form['Provider-Id']
+        truck_id = request.form['Truck-Id']
+        billingdb = mysql.connector.connect(
+            host="billingdb",
+            user="root",
+            password="1234!",
+            database='billdb',
+        )
+        cursor = billingdb.cursor()
+        cursor.execute("USE billdb")
+        cursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
+        results = cursor.fetchall()
+        if results:
+            cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
+            return Response("Ok", mimetype='text/plain')
+        else:
+            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain')
+
+    elif request.method == 'GET':
+        return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
+
+
 
 if __name__ == '__main__':
     ifconnect = False
