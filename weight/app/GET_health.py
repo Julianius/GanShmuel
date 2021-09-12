@@ -5,8 +5,12 @@
 import requests
 
 def GET_health():
-	req = requests.get("http://localhost:5000/unknown")
-	if req.status_code < 200 or req.status_code > 299:
-		return "200 OKi doki"
+	services = ("unknown")
+	for service in services:
+		req = requests.get(f"http://localhost:5000/{service}")
+		status_code = req.status_code
+		if status_code < 200 or status_code > 299:
+			result = f"{status_code} server error"
+		return result
 	else:
-		return "500 internal server error"
+		return "200 ok"
