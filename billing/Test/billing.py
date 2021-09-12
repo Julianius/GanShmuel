@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask import Response
 import mysql.connector
 import json
@@ -6,9 +6,11 @@ import requests
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return "Welcome to Billing Blue Site"
+
 
 @app.route('/health')
 def health():
@@ -17,18 +19,17 @@ def health():
     else:
         return Response({"Internal server error"}, status=500)
 
+
 @app.route('/provider')
 def provider():
     return render_template('providers.html')
 
-@app.route('/provider', methods=['GET', 'POST'])
-def providers():
+
+@app.route('/api/<room>', methods=['GET','POST'])
+def providers(room):
     if request.method == 'POST':
         provider = request.form['provider']
         provid = request.form["provid"]
-        jsonprovider = {"id": provid, "name": provider}
-        with open(f"./templates/providerjson.json", "a+") as chat_file:
-            chat_file.write(str(jsonprovider))
         billingdb = mysql.connector.connect(
             host="billingdb",
             user="root",
@@ -37,14 +38,22 @@ def providers():
         )
         mycursor = billingdb.cursor()
         mycursor.execute("USE billdb")
-        # mycursor.execute(f"SELECT 'name' FROM Provider")
-        # result = mycursor.fetchone()
-        # if provider not in result:
-        mycursor.execute(f"INSERT INTO Provider(id, name) VALUES('{str(provid)}', '{str(provider)}')")
-        return requests.post('localhost:8081/provider', json={'id': 1, 'name': ''})
-
+        mycursor.execute(f"SELECT name from Provider where name='{str(provider)}'")
+        results = mycursor.fetchall()
+        if not results:
+            jsonprovider = {'id': str(provid), 'name': str(provider)}
+            try:
+                mycursor.execute("USE billdb")
+                mycursor.execute(f"INSERT INTO Provider(id, name) VALUES('{str(provid)}', '{str(provider)}')")
+            except mysql.connector.errors.IntegrityError:
+                return Response('id exist', status=400)
+            except:
+                return Response('error', status=400)
+            return jsonify(jsonprovider)
+        else:
+            return Response('name exist', status=400)
     elif request.method == 'GET':
-        return Response({"enter"}, mimetype='text/plain')
+        return Response("enter provider name an provider ID:", mimetype='text/plain')
 
 if __name__ == '__main__':
     ifconnect = False

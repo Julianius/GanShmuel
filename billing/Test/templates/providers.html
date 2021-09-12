@@ -3,8 +3,7 @@
   <script>
     function room() {
       var room = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
-      if (room=='') room = 'general';
-      return "/"+room;
+      return "/api/"+room;
     }
 
     function updateChat() {
