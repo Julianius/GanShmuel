@@ -9,7 +9,7 @@ BRANCHES_FORBIDDEN = ['devops', 'weight', 'billing']
 REPO = 'https://github.com/Julianius/GanShmuel.git'
 PATH = '/GanShmuel/app/'
 
-def build_app(branch_name, merger_name):
+def build_app(branch_name, merger_name, pusher):
   if branch_name in BRANCHES_ALLOWED and merger_name != BRANCHES_FORBIDDEN[0]:
 
     os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + 'temp')
@@ -45,7 +45,10 @@ def github_webhook_endpoint():
     merger_name=array_mergers[0]
   else:
     merger_name=''
-  build_app(branch_name, merger_name)
+
+  pusher = data.get('pusher').get('name')
+  print(pusher)
+  build_app(branch_name, merger_name, pusher)
 
   return "OK"
 
