@@ -9,6 +9,13 @@ BRANCHES_FORBIDDEN = ['devops', 'weight', 'billing']
 REPO = 'https://github.com/Julianius/GanShmuel.git'
 PATH = '/GanShmuel/app/'
 
+#@app.before_first_request
+#def initial_build():
+  #build_app('main', 'billing-staging', '')
+  #build_app('main', 'weight-staging', '')
+  #build_app('billing-staging', '', '')
+  #build_app('weight-staging', '', '')
+
 def build_app(branch_name, merger_name, pusher):
   if branch_name in BRANCHES_ALLOWED and merger_name != BRANCHES_FORBIDDEN[0]:
 
@@ -20,13 +27,17 @@ def build_app(branch_name, merger_name, pusher):
 
     if branch_name == BRANCHES_ALLOWED[0]:
       if merger_name == BRANCHES_ALLOWED[1]:
+        os.environ["DYNAMIC_PORT"] = "8084"
         os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml up -d --build --force-recreate')
       elif merger_name == BRANCHES_ALLOWED[2]:
+        os.environ["DYNAMIC_PORT"] = "8082"
         os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml up -d --build --force-recreate')
     elif branch_name == BRANCHES_ALLOWED[1]:
+      os.environ["DYNAMIC_PORT"] = "8083"
       os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml up -d --build --force-recreate')
     else:
-      os.system('docker-compose -f ' + PATH + branch_name + '/billing/Test/docker-compose.yml up -d --build --force-recreate')
+      os.environ["DYNAMIC_PORT"] = "8081"
+      os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml up -d --build --force-recreate')
 
 
 @app.route('/health', methods=['GET'])
