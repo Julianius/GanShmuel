@@ -5,7 +5,7 @@
 import requests
 
 def GET_health():
-	req = requests.get("http://localhost:8080/unknown")
+	req = requests.get("http://localhost:5000/unknown")
 	if req.status_code < 200 or req.status_code > 299:
 		return "200 OKi doki"
 	else:
