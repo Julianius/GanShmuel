@@ -10,6 +10,8 @@ RUN apt-get update -y
 
 RUN apt-get install -y python3-pip python3-dev curl
 
+RUN pip install --default-timeout=200 future
+
 COPY ./requirements.txt /app/requirements.txt
 
 WORKDIR /app

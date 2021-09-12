@@ -1,4 +1,3 @@
-
 from POST_batch_weight import POST_batch_weight
 from flask import Flask, Response, request
 import requests
