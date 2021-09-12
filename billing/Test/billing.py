@@ -3,6 +3,7 @@ from flask import Response
 import mysql.connector
 import json
 import requests
+import random
 
 app = Flask(__name__)
 
@@ -29,7 +30,6 @@ def provider():
 def providers(room):
     if request.method == 'POST':
         provider = request.form['provider']
-        provid = request.form["provid"]
         billingdb = mysql.connector.connect(
             host="billingdb",
             user="root",
@@ -41,19 +41,24 @@ def providers(room):
         mycursor.execute(f"SELECT name from Provider where name='{str(provider)}'")
         results = mycursor.fetchall()
         if not results:
-            jsonprovider = {'id': str(provid), 'name': str(provider)}
-            try:
-                mycursor.execute("USE billdb")
-                mycursor.execute(f"INSERT INTO Provider(id, name) VALUES('{str(provid)}', '{str(provider)}')")
-            except mysql.connector.errors.IntegrityError:
-                return Response('id exist', status=400)
-            except:
-                return Response('error', status=400)
-            return jsonify(jsonprovider)
+            switch = True
+            while switch:
+                prov_id=random.randint(1,999999)
+                jsonprovider = {'id': str(prov_id), 'name': str(provider)}
+                try:
+                    mycursor.execute("USE billdb")
+                    mycursor.execute(f"INSERT INTO Provider(id, name) VALUES('{str(prov_id)}', '{str(provider)}')")
+                    switch = False
+                except mysql.connector.errors.IntegrityError:
+                    continue
+                    return Response('id exist', status=400)
+                except:
+                    return Response('error', status=400)
+                return jsonify(jsonprovider)
         else:
             return Response('name exist', status=400)
     elif request.method == 'GET':
-        return Response("enter provider name an provider ID:", mimetype='text/plain')
+        return Response("enter provider name:", mimetype='text/plain')
 
 if __name__ == '__main__':
     ifconnect = False
