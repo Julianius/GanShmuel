@@ -10,7 +10,7 @@ def POST_batch_weight(filename):
     
     if filename in os.listdir(path):
 
-        # Lines for --> csv <-- files
+        # Lines for ---> csv <--- files
         if filename.endswith('.csv'): 
             f = open(f'in/{filename}')
             lines = f.readlines()
@@ -25,7 +25,7 @@ def POST_batch_weight(filename):
                 data = (id, weight, unit)
                 mySQL.setData(query, data)
                 
-        # Lines for --> json <-- files
+        # Lines for ---> json <--- files
         elif filename.endswith('.json'):
             f = open(f"in/{filename}")
             lines = json.load(f)
