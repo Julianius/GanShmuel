@@ -18,9 +18,25 @@ def health():
 def unknown_weight():
     return GET_unknown()
 
-@app.route("/batch-weight/<file>", methods=['POST', 'GET'])
+@app.route("/batch-weight/<file>", methods=['POST'])
 def batch_weight(file):
     return POST_batch_weight(file)
-    
+
+@app.route("/weight", methods=['GET']) 
+def weight_get_weight(): 
+    return "to do"
+
+@app.route("/item/<id>", methods=['GET']) 
+def item_weight(id): 
+    return "to do"
+
+@app.route("/weight", methods=['POST']) 
+def weight_post_weight(): 
+    return "to do"
+
+@app.route("/session/<id>", methods=['GET']) 
+def session_weight(id): 
+    return "to do"
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

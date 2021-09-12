@@ -25,5 +25,3 @@ class mysql_db(object):
 		cursor = connected.cursor()
 		cursor.execute(query, data)
 		connected.commit()
-
-		
