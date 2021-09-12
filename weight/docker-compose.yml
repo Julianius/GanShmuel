@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  app:
+    build: ./app
+    ports: 
+      - "8083:5000"
+  mysql:
+    image: mysql:8
+    volumes: 
+      - "./mysql-db/one-db.sql:/docker-entrypoint-initdb.d/one-db.sql"
+    environment: 
+      - MYSQL_ROOT_PASSWORD=123456
+        
