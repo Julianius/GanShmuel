@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import os, os.path
 import re
 from test import check_contacts
+from monitor import script
 
 app = Flask(__name__)
 
@@ -73,7 +74,8 @@ def build_app(data):
 
 @app.route('/monitor', methods=['GET'])
 def home():
-    return 'fgfgfg'
+    script()
+    return render_template('index.html')
 
 @app.route('/health', methods=['GET'])
 def health():
