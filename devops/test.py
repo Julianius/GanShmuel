@@ -1,11 +1,8 @@
 import smtplib
-# from typing import Counter
-
 
 def check_contacts(BRANCH_NAME,PUSHER):
     PUSHER_EMAILS={
         "weight_team":{
-            "matanshk":"shekel8@gmail.com",
             "yaelkadosh":"yael260640@gmail.com",
             "Faresbad":"fares.badran@studio.unibo.it",
             "sapsap1":"sapiralon95@gmail.com",
@@ -27,18 +24,29 @@ def check_contacts(BRANCH_NAME,PUSHER):
         }}
         
     if BRANCH_NAME =="weight-staging":
-        run_tests(PUSHER_EMAILS["weight_team"]['yaelkadosh'],PUSHER_EMAILS["weight_team"][PUSHER])
+        run_tests(PUSHER_EMAILS["weight_team"]['yaelkadosh'], PUSHER_EMAILS["weight_team"][PUSHER])
 
     elif BRANCH_NAME =="billing-staging":
-        run_tests(PUSHER_EMAILS["billing_team"]['nadivravivz'],PUSHER_EMAILS["billing_team"][PUSHER])
+        run_tests(PUSHER_EMAILS["billing_team"]['nadivravivz'], PUSHER_EMAILS["billing_team"][PUSHER])
     else:
-        #need to write the same for main branch
+        for team in PUSHER_EMAILS.items():
+            if PUSHER in team[1]:
+                if team[0] == "weight_team":
+                    run_tests(PUSHER_EMAILS["weight_team"]['yaelkadosh'], PUSHER_EMAILS["weight_team"][PUSHER])
+                elif team[0] == "billing_team":
+                    run_tests(PUSHER_EMAILS["billing_team"]['nadivravivz'], PUSHER_EMAILS["billing_team"][PUSHER])
+                else:
+                    run_tests(PUSHER_EMAILS["devops_team"]['matanshk'], PUSHER_EMAILS["devops_team"][PUSHER])
+                break
         pass
 
 
 def send_email(SUBJECT, TEXT, TEAM_LEADER, PUSHER):
     sender_email = "bluedevopsdeveleap@gmail.com"
-    rec_email = [TEAM_LEADER,PUSHER]
+    if TEAM_LEADER == PUSHER:
+        rec_email = [TEAM_LEADER]
+    else:
+        rec_email = [TEAM_LEADER,PUSHER]
     password = "blue123!"
     message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT)
     server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -75,5 +83,5 @@ def run_tests(TEAM_LEADER, PUSHER):
             send_email("Blue team tests failure", "Following tests failed: " + str(failure_list), TEAM_LEADER, PUSHER)
             return 1
 
-check_contacts("weight-staging","matanshk")
-#run_tests("shekel8@gmail.com", "email@gmail.com",)
+# Entrypoint
+check_contacts("main","Izhak")
