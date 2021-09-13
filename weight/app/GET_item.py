@@ -9,9 +9,11 @@ def GET_item(id):
 		exitTime = mysql.getData("SELECT date FROM sessions WHERE direction = 'out'")
 		in_time = enterTime.now().strftime("%Y%m%d%H%M%S")
 		out_time = exitTime.now().strftime("%Y%m%d%H%M%S") 
-		duration = (out_time - in_time)
-
-		return duration
+		if(out_time >= in_time):
+			duration = (out_time - in_time)
+			return duration
+		else:
+			print("Error time")
 
 	except:
 		print("Error!!!")
