@@ -125,7 +125,15 @@ INSERT INTO sessions (direction, f, date, bruto, neto, trucks_id, products_id) V
 
 
 
-
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-8263', 1);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-7854', 1);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-6523', 1);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-8263', 2);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-7854', 2);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-6523', 2);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-8263', 3);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-7854', 3);
+INSERT INTO containers_has_sessions (containers_id, sessions_id) VALUES ('K-6523', 3);
 
 
 

@@ -5,7 +5,6 @@ import requests
 from GET_health import GET_health
 from GET_unknown import GET_unknown
 from GET_weight import GET_weight
-from datetime import datetime
 
 
 app = Flask(__name__)
@@ -16,7 +15,6 @@ def home():
 
 @app.route("/health", methods=['GET'])
 def health():
-    print("hhhh")
     return GET_health()
 
 @app.route("/unknown", methods=['GET'])
@@ -25,11 +23,9 @@ def unknown_weight():
 
 @app.route("/weight", methods=['GET'])
 def weight_weight():
-    fromTime = request.args.get('from') if request.args.get('from') else "000000"
-    toTime = request.args.get('to') if request.args.get('to') else datetime.now().strftime("%Y%m%d%H%M%S")
-    filter = request.args.get('filter')
-    return f"{fromTime} {toTime} {filter}"
-    # return GET_weight()
+    # return f"{fromTime} {toTime} {filter}"
+    return GET_weight(request)
+
 @app.route("/batch-weight/<file>", methods=['POST', 'GET'])
 def batch_weight(file):
     return POST_batch_weight(file)
