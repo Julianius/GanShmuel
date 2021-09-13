@@ -36,6 +36,10 @@ def rates():
 @app.route('/trucks.html')
 def truck():
     return render_template('trucks.html')
+@app.route('/trucks.html/<truck_number>')
+def truck_id(truck_number):
+    return render_template('truck_id.html')
+
 
 
 @app.route('/api/providers.html', methods=['GET', 'POST'])
@@ -124,26 +128,27 @@ def trucks():
 
     if request.method == 'GET':
         return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
-    elif request.method == 'PUT':
-        prov_name = request.form['Provider-Name']
-        truck_id = request.form('Truck-Id')
-        billingdb = mysql.connector.connect(
-            host="billingdb",
-            user="root",
-            password="1234!",
-            database='billdb',
-        )
-        cursor = billingdb.cursor()
-        cursor.execute("USE billdb")
-        cursor.execute(f"SELECT * FROM Provider WHERE name='{str(prov_name)}'")
-        results = cursor.fetchall()
-        if results:
-            prov_id = str(results[0])
-            cursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
-            cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
-        else:
-            Response("Provider name not found -please enter provider to the providers list",mimetype='text/plain')
 
+
+@app.route('/trucks.html/<truck_id>', methods=['PUT'])
+def trucks2(truck_id):
+    prov_id = request.form['provider-id']
+    billingdb = mysql.connector.connect(
+        host="billingdb",
+        user="root",
+        password="1234!",
+        database='billdb',
+    )
+    cursor = billingdb.cursor()
+    cursor.execute("USE billdb")
+    cursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
+    results = cursor.fetchall()
+    if results:
+        cursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
+        cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id):}')")
+        return Response(f"changed truck number {truck_id } to provider {prov_id}", mimetype='text/plain')
+    else:
+         return Response("Provider ID not found -please enter provider to the providers list", mimetype='text/plain')
 
 if __name__ == '__main__':
     try:
