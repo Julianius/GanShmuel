@@ -2,14 +2,11 @@ from flask import Flask, Response, request
 import requests
 from GET_health import GET_health
 from GET_unknown import GET_unknown
-<<<<<<< HEAD
 from GET_weight import GET_weight
 from GET_item import GET_item
 from POST_weight import POST_weight
-=======
 from POST_batch_weight import POST_batch_weight
 from GET_session import GET_session
->>>>>>> cf0bce6dd7022458859c184577d07e052d81810c
 
 app = Flask(__name__)
 
