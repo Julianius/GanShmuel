@@ -131,6 +131,7 @@ INSERT INTO sessions (direction, f, date, bruto, neto, trucks_id, products_id) V
 
 
 
+
 -- © 2019 GitHub, Inc.
 -- Terms
 -- Privacy
