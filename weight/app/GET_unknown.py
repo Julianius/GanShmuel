@@ -13,6 +13,6 @@ def GET_unknown():
 		if len(info) == 0:
 			return "No missing weights found in data base"
 		return '\n'.join(map(str,info))
-
+		
 	except:		
 		return "Weight data is unavailable at the moment."
