@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 import os, os.path
 import re
 from test import check_contacts
-from monitor import script
+from monitor.script import script
 
 app = Flask(__name__)
 
