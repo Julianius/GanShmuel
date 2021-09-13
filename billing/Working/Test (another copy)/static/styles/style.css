@@ -1,0 +1,109 @@
+body {
+    margin: 0;
+    background-color: #F9F6F2;
+    font-family: sans-serif;
+
+}
+
+.dottedRule{
+    background-color: #F9F9F9 ;
+    width: 6%;
+    border-style: none;
+    border-top-style: dotted;
+    border-top-color: #A0937D;
+    border-width: 5px;
+    position: absolute ;
+     display: block;
+    right: 49%;
+
+}
+
+.headNev{
+    background-color: #F9F6F2;
+    font-family: "poppins Black 900",sans-serif;
+    font-size: 125%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 27px 0 4px 60px;
+    z-index: 3;
+}
+.headNevLink1:after {
+
+    content: "";
+    position: absolute;
+    background-color: darkgoldenrod;
+    opacity: 0.4;
+    height: 3px;
+    width: 0;
+    left: 0;
+    bottom: -5px;
+    transform: scaleY(-1);
+    transform: rotate(2deg);
+    transition: 0.09s;
+}
+
+.headNevLink2:after {
+    content: "";
+    position: absolute;
+    background-color: darkgoldenrod;
+    opacity: 0.4;
+    height: 3px;
+    width: 0;
+    left: 0;
+    bottom: -5px;
+    transform: scaleY(-1);
+    transform: rotate(-2deg);
+    transition: 0.09s;
+}
+.headNevLink1:hover:after{
+    width: 100%;
+}
+.headNevLink2:hover:after{
+    width: 100%;
+}
+.headNevLink1{
+    position: relative;
+    display: inline-block;
+    text-decoration:none;
+    color: #495464;
+    letter-spacing: 0.5px;
+    padding-: 0px ,10px;
+    margin: 10px
+}
+.headNevLink2{
+    position: relative;
+    display: inline-block;
+    text-decoration:none;
+    color: #495464;
+    letter-spacing: 0.5px;
+    padding-: 0px ,10px;
+    margin: 10px ;
+}
+
+.contentBlock{
+    display: inline-block;
+    position: absolute;
+    height: 300px;
+    width: 1300px;
+    margin: 0;
+}
+
+.mainHeading{
+    position: absolute;
+    font-size:70px;
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap')
+    font-family: "Montserrat Light 300",sans-serif;
+
+}
+
+.secondHeading{
+    position: absolute;
+    display: inline-block;
+    color:#495464 ;
+    margin-left: 5px;
+
+
+}
