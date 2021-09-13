@@ -8,7 +8,7 @@ def check(thecheck,therespone):
         return 1
 
 def checkhealth():
-    urlname=['health','provider','rates','trucks']
+    urlname=['health','providers.html','rates.html','trucks.html']
     for url in urlname:
         URL = "http://localhost:8081/{}".format(url)
         res = requests.get(url=URL)
