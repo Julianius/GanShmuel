@@ -1,3 +1,8 @@
+"""
+Check DB and return all null containers weight
+Author: Shaygs
+"""
+
 from mysql_db import mysql_db
 
 def GET_unknown():
