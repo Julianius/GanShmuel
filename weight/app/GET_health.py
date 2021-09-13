@@ -1,6 +1,5 @@
 #Senaty test, check DB is online 
 #Author: Shaygs
-
 #from . import app
 import requests
 
