@@ -1,4 +1,5 @@
 import smtplib
+from billingtest import billingtest
 
 def check_contacts(BRANCH_NAME,PUSHER):
     PUSHER_EMAILS={
@@ -58,30 +59,13 @@ def send_email(SUBJECT, TEXT, TEAM_LEADER, PUSHER):
 
 
 def run_tests(TEAM_LEADER, PUSHER):
-    with open("test.txt", "r") as test_file:
-        file_read=test_file.readlines()
-        failure_list=[]
-        counter=0
-        for line in file_read:
-            counter+=1
-            test_result=int(line.split(">")[-1].split(" ")[1])
-            num=int(line[1])
-            result=num%2
-            # If current test is successful, move on
-            if (result==0 and test_result==0) or (result==1 and test_result==1):
-                pass
-            # If current test failed, add its number to the failure list
-            else:
-                failure_list.append(counter)
-                
-        # Send success email
-        if len(failure_list)==0:
-            send_email("Blue team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
-            return 0
-        # Send failure email
-        else:
-            send_email("Blue team tests failure", "Following tests failed: " + str(failure_list), TEAM_LEADER, PUSHER)
-            return 1
+    test_result = billingtest()
+    if test_result == 0:
+        send_email("Blue team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
+        return 0
+    elif test_result == 1:
+        send_email("Blue team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
+        return 1
 
 # Entrypoint
 check_contacts("main","Izhak")
