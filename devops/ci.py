@@ -4,7 +4,7 @@ import re
 from test import check_contacts
 from monitor.script import script
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='monitor/templates')
 
 BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
 BRANCHES_FORBIDDEN = ['devops', 'weight', 'billing']
