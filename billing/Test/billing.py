@@ -15,7 +15,7 @@ def index():
     #Add Navigiation bar to our APIs
 
 
-@app.route('/health')
+@app.route('/health.html')
 def health():
     try:
         mycursor.execute("USE billdb")
@@ -24,21 +24,21 @@ def health():
         return Response({"Internal server error"}, status=500)
 
 
-@app.route('/provider')
+@app.route('/providers.html')
 def provider():
     return render_template('providers.html')
 
-@app.route('/rates')
+@app.route('/rates.html')
 def rates():
     mydir = os.listdir("/in")
     return render_template('rates.html',mydir=mydir)
 
-@app.route('/trucks')
+@app.route('/trucks.html')
 def truck():
     return render_template('trucks.html')
 
 
-@app.route('/api/provider', methods=['GET', 'POST'])
+@app.route('/api/providers.html', methods=['GET', 'POST'])
 def providers():
     if request.method == 'POST':
         provider = request.form['provider']
@@ -66,7 +66,8 @@ def providers():
         return Response("enter provider name:", mimetype='text/plain')
 
 
-@app.route('/api/rates', methods=['POST','GET'])
+
+@app.route('/api/rates.html', methods=['POST','GET'])
 def ratespost():
     if request.method == 'GET':
         mycursor = billingdb.cursor()
@@ -104,7 +105,9 @@ def ratespost():
                 print("something went wrong check it")
         return "hello"
 
-@app.route('/api/trucks', methods=['GET', 'POST', 'PUT'])
+
+
+@app.route('/api/trucks.html', methods=['GET', 'POST', 'PUT'])
 def trucks():
     if request.method == 'POST':
         prov_id = request.form['Provider-Id']
@@ -121,7 +124,25 @@ def trucks():
 
     if request.method == 'GET':
         return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
-
+    elif request.method == 'PUT':
+        prov_name = request.form['Provider-Name']
+        truck_id = request.form('Truck-Id')
+        billingdb = mysql.connector.connect(
+            host="billingdb",
+            user="root",
+            password="1234!",
+            database='billdb',
+        )
+        cursor = billingdb.cursor()
+        cursor.execute("USE billdb")
+        cursor.execute(f"SELECT * FROM Provider WHERE name='{str(prov_name)}'")
+        results = cursor.fetchall()
+        if results:
+            prov_id = str(results[0])
+            cursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
+            cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
+        else:
+            Response("Provider name not found -please enter provider to the providers list",mimetype='text/plain')
 
 
 if __name__ == '__main__':
