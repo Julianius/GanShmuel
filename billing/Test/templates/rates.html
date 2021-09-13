@@ -1,10 +1,15 @@
-  <html>
+
+<html>
+
+
+
+
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
   <script>
     function room() {
       var room = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
-      if (room=='') room = 'general';
-      return "/api/chat/"+room;
+      return "/api/"+room;
     }
 
     function updateChat() {
@@ -19,20 +24,31 @@
     }
 
     $(document).ready(function() {
-      $("#chatbox").text("Loading chat...");
+      $("#chatbox").text("Loading Rates...");
       $("#sendBtn").click(sendmessage)
       window.setTimeout(updateChat,1500);
     });
 
   </script>
+  <head>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+  </head>
   <body>
+  <nav class="headNev">
+        <a class="headNevLink1" href="Index.html">  <i>Index</i></a>
+        <a class="headNevLink2" href="providers.html">Providers</a>
+        <a class="headNevLink2" href="rates.html">Rates</a>
+        <a class="headNevLink2" href="trucks.html">Trucks </a>
+    </nav>
+  <div class="contentBlock" style="top:200px ">
     <form id="inform" action="/api/chat" method="POST">
-      User name:<input name="username" type=text>
-      message:<input name="msg" type=text>
+      <pre> Choose File to Upload from this list: {{ mydir }} </pre>
+      <input name="msgfile" type=text>
       <input id="sendBtn" type="button" value="send">
     </form>
-    <pre id="chatbox">Loading...</pre>
-    <p>hostname is: $(hostname)</p>
-    <?php echo gethostname(); ?>
+
+    <h3> These are the current rates: </h3>
+    <pre id="chatbox"></pre>
+  </div>
   </body>
 </html>
