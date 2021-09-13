@@ -2,6 +2,8 @@ from flask import Flask, Response, request
 import requests
 from GET_health import GET_health
 from GET_unknown import GET_unknown
+from GET_weight import GET_weight
+from GET_item import GET_item
 from POST_batch_weight import POST_batch_weight
 from GET_session import GET_session
 
@@ -23,17 +25,14 @@ def unknown_weight():
 def batch_weight(file):
     return POST_batch_weight(file)
 
-@app.route("/weight", methods=['GET']) 
-def weight_get_weight(): 
-    return "to do"
 
 @app.route("/item/<id>", methods=['GET']) 
 def item_weight(id): 
-    return "to do"
+    return GET_item(id)
 
 @app.route("/weight", methods=['POST']) 
 def weight_post_weight(): 
-    return "to do"
+    return POST_weight()
 
 @app.route("/session", methods=['GET']) 
 def session_weight(): 

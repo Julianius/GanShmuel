@@ -6,7 +6,7 @@ def POST_batch_weight(filename):
     mySQL = mysql_db()
     query = "INSERT IGNORE INTO containers (id, weight, unit) VALUES (%s,%s,%s)"
     path = 'in/'
-    
+
     if filename in os.listdir(path):
 
         # Lines for ---> csv <--- files 
