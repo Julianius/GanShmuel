@@ -24,7 +24,6 @@ def unknown_weight():
 
 @app.route("/weight", methods=['GET'])
 def weight_weight():
-    # return f"{fromTime} {toTime} {filter}"
     return GET_weight(request)
 
 @app.route("/batch-weight/<file>", methods=['POST', 'GET'])
