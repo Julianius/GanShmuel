@@ -12,6 +12,7 @@ def GET_item(id):
 		if(out_time >= in_time):
 			duration = (out_time - in_time)
 			return duration
+		
 		else:
 			print("Error time")
 
