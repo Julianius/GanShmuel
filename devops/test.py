@@ -1,7 +1,6 @@
 import os
 from mailing import *
 
-PATH_TESTS = '/GanShmuel/tests/'
 BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
 SUCCESS_CODE = 0
 FAILURE_CODE = 1
