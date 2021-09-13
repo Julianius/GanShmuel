@@ -71,6 +71,9 @@ def build_app(data):
       os.environ["DYNAMIC_PORT"] = "8081"
       os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml -p billing-staging up -d --build --force-recreate')
 
+@app.route('/monitor', methods=['GET'])
+def home():
+    return 'fgfgfg'
 
 @app.route('/health', methods=['GET'])
 def health():

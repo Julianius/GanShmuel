@@ -1,0 +1,20 @@
+.port-container {
+    display: inline-block;
+    min-width: 10rem;
+    text-align: center;
+    height: 10rem;
+}
+
+.green {
+    width: 60%;
+    margin: auto;
+    height: 5rem;
+    background-color: green;
+}
+
+.red {
+    width: 60%;
+    margin: auto;
+    height: 2rem;
+    background-color: red;
+}
