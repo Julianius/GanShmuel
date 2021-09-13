@@ -5,7 +5,5 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-co
 RUN chmod +x /usr/local/bin/docker-compose
 WORKDIR /GanShmuel/ci
 COPY . .
-RUN ls -lahF
 RUN pip install --no-cache-dir --user -r requirements.txt
-EXPOSE 5000
 ENTRYPOINT [ "python3", "./ci.py" ]

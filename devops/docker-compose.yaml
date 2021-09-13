@@ -5,7 +5,7 @@ services:
     build: .
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/julian/GanShmuel:/GanShmuel/app
+      - /home/${USER}/GanShmuel/app:/GanShmuel/app
+      - /home/${USER}/GanShmuel/test:/GanShmuel/test
     ports: 
      - "8080:5000"
-    
