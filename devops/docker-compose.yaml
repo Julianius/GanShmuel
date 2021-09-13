@@ -1,0 +1,11 @@
+version: '3'
+
+services: 
+  ci:
+    build: .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/${USER}/GanShmuel/app:/GanShmuel/app
+      - /home/${USER}/GanShmuel/test:/GanShmuel/test
+    ports: 
+     - "8080:5000"
