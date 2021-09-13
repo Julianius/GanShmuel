@@ -18,7 +18,7 @@ def health():
 def unknown_weight():
     return GET_unknown()
 
-@app.route("/batch-weight/<file>", methods=['POST'])
+@app.route("/batch-weight/<file>", methods=['POST','GET'])
 def batch_weight(file):
     return POST_batch_weight(file)
 
