@@ -48,6 +48,9 @@ def build_app(branch_name, merger_name, pusher):
       os.environ["DYNAMIC_PORT"] = "8081"
       os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml -p billing-staging up -d --build --force-recreate')
 
+@app.route('/', methods=['GET'])
+def home():
+    return 'fgfgfg'
 
 @app.route('/health', methods=['GET'])
 def health():
