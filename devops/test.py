@@ -1,133 +1,78 @@
-import smtplib, os
-from billingtest import billingtest
+import os
+from mailing import *
 
-def check_contacts(BRANCH_NAME,PUSHER):
-    PUSHER_EMAILS={
-        "weight_team":{
-            "yaelkadosh":"yael260640@gmail.com",
-            "Faresbad":"fares.badran@studio.unibo.it",
-            "sapsap1":"sapiralon95@gmail.com",
-            "shaygman":"shaygman@gmail.com",
-            "Yoav Yung":"joaffzie@gmail.com"
-        },
+PATH_TESTS = '/GanShmuel/tests/'
+BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
+SUCCESS_CODE = 0
+FAILURE_CODE = 1
+PATH_TEST = '/GanShmuel/test/'
+PATH_APP = '/GanShmuel/app/'
 
-        "billing_team": {
-            "nadivravivz":"ravivnadiv2@gmail.com",
-            "naorsavorai":"naorsv@gmail.com",
-            "af176":"abigail.f176@gmail.com",
-            "kfirosb":"kfirosb@gmail.com",
-        },
+def check_contacts(branch_name, pusher, merger_name):    
+    if branch_name =="weight-staging":
+        run_tests(CONTACT_EMAILS["weight_team"]['yaelkadosh'], CONTACT_EMAILS["weight_team"][pusher], branch_name, merger_name)
 
-        "devops_team": {
-            "matanshk":"shekel8@gmail.com",
-            "Julianius":"julianmotorbreathe@gmail.com",
-            "Izhak":"izhaklatovski@gmail.com",
-        }}
-        
-    if BRANCH_NAME =="weight-staging":
-        run_tests(PUSHER_EMAILS["weight_team"]['yaelkadosh'], PUSHER_EMAILS["weight_team"][PUSHER])
-
-    elif BRANCH_NAME =="billing-staging":
-        run_tests(PUSHER_EMAILS["billing_team"]['nadivravivz'], PUSHER_EMAILS["billing_team"][PUSHER])
+    elif branch_name =="billing-staging":
+        run_tests(CONTACT_EMAILS["billing_team"]['nadivravivz'], CONTACT_EMAILS["billing_team"][pusher], branch_name, merger_name)
     else:
-        for team in PUSHER_EMAILS.items():
-            if PUSHER in team[1]:
+        for team in CONTACT_EMAILS.items():
+            if pusher in team[1]:
                 if team[0] == "weight_team":
-                    run_tests(PUSHER_EMAILS["weight_team"]['yaelkadosh'], PUSHER_EMAILS["weight_team"][PUSHER])
+                    run_tests(CONTACT_EMAILS["weight_team"]['yaelkadosh'], CONTACT_EMAILS["weight_team"][pusher], branch_name, merger_name)
                 elif team[0] == "billing_team":
-                    run_tests(PUSHER_EMAILS["billing_team"]['nadivravivz'], PUSHER_EMAILS["billing_team"][PUSHER])
+                    run_tests(CONTACT_EMAILS["billing_team"]['nadivravivz'], CONTACT_EMAILS["billing_team"][pusher], branch_name, merger_name)
                 else:
-                    run_tests(PUSHER_EMAILS["devops_team"]['matanshk'], PUSHER_EMAILS["devops_team"][PUSHER])
+                    run_tests(CONTACT_EMAILS["devops_team"]['matanshk'], CONTACT_EMAILS["devops_team"][pusher], branch_name, merger_name)
                 break
         pass
 
+def run_tests(team_leader, pusher, branch_name, merger_name):
 
-def send_email(SUBJECT, TEXT, TEAM_LEADER, PUSHER):
-    sender_email = "bluedevopsdeveleap@gmail.com"
-    if TEAM_LEADER == PUSHER:
-        rec_email = [TEAM_LEADER]
-    else:
-        rec_email = [TEAM_LEADER,PUSHER]
-    password = "blue123!"
-    message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT)
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(sender_email, password)
-    print("Login success")
-    server.sendmail(sender_email, rec_email, message)
-    print("Email has been sent to ", rec_email)
-
-
-def run_tests(TEAM_LEADER, PUSHER, BRANCH_NAME,MERGER_NAME):
-
-    ##### docker compose up (test compose) - START
-    PATH = '/GanShmuel/test/'
     os.environ["DYNAMIC_PORT"] = "8085"
-    BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
-    if BRANCH_NAME == BRANCHES_ALLOWED[0]:
-      if MERGER_NAME == BRANCHES_ALLOWED[1]:
-        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/weight/docker-compose.yml -p main-weight up -d --build --force-recreate')
-        
-        ### weight test
-        test_result = billingtest() ## <----- WEIGHT TEST FILE
-        if test_result == 0:
-            send_email("Weight team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
-            return 0
-        elif test_result == 1:
-            send_email("Weight team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
-            return 1
-        ### end weight test
+    is_weight  = False
+    os.system('rm -rf ' + PATH_TEST + branch_name)
+    os.system('mkdir -p ' + PATH_TEST + branch_name)
+    os.system('cp -a '+ PATH_APP + 'temp/* ' + PATH_APP + 'temp/.* ' + PATH_TEST + branch_name + '/ 2>/dev/null')
 
-      elif MERGER_NAME == BRANCHES_ALLOWED[2]:
-        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/billing/Prod/docker-compose.yml -p main-billing up -d --build --force-recreate')
-
-        ### billing test
-        test_result = billingtest() ## <----- billing TEST FILE
-        if test_result == 0:
-            send_email("Billing team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
-            return 0
-        elif test_result == 1:
-            send_email("Billing team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
-            return 1
-
-        ### end billing test
-
-    elif BRANCH_NAME == BRANCHES_ALLOWED[1]:
-        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/weight/docker-compose.yml -p weight-staging up -d --build --force-recreate')
-    
-        ### weight test
-        test_result = billingtest() ## <----- WEIGHT TEST FILE
-        if test_result == 0:
-            send_email("Weight team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
-            return 0
-        elif test_result == 1:
-            send_email("Weight team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
-            return 1
-        ### end weight test
-    
+    if branch_name == BRANCHES_ALLOWED[0]:
+      if merger_name == BRANCHES_ALLOWED[1]:
+        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/weight/docker-compose.yml -p main-weight up -d --build --force-recreate')        
+        test_result = weight_test(team_leader, pusher)     
+      elif merger_name == BRANCHES_ALLOWED[2]:
+        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/billing/Prod/docker-compose.yml -p main-billing up -d --build --force-recreate')
+        test_result = billing_test(team_leader, pusher)
+    elif branch_name == BRANCHES_ALLOWED[1]:
+        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/weight/docker-compose.yml -p weight-staging up -d --build --force-recreate')
+        test_result = weight_test(team_leader, pusher)
+        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/weight/docker-compose.yml down -v')         
     else:
-        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/billing/Prod/docker-compose.yml -p billing-staging up -d --build --force-recreate')
-            ### billing test
-        test_result = billingtest() ## <----- billing TEST FILE
-        if test_result == 0:
-            send_email("Billing team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
-            return 0
-        elif test_result == 1:
-            send_email("Billing team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
-            return 1
+        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/billing/Prod/docker-compose.yml -p billing-staging up -d --build --force-recreate')
+        test_result = billing_test(team_leader, pusher)
 
-        ### end billing test
-    ##### docker compose up (test compose) - end
+    if test_result == SUCCESS_CODE:
+        send_email("Blue team tests success", "All the tests succeeded, good job!", team_leader, pusher)
+    else:
+        send_email("Blue team tests failure", "Some tests failed, go check your code.", team_leader, pusher)
+    
+    return test_result
 
+def billing_test(team_leader, pusher):
+    ## Still no path for billing 13.09.2021
+    #res = os.exec('/bin/python3 ' + PATH_TESTS + BRANCHES_ALLOWED[2] + '')
+    res = 0
+    if res == SUCCESS_CODE:
+        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        return SUCCESS_CODE
+    else:
+        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        return FAILURE_CODE
 
-
-    test_result = billingtest()
-    if test_result == 0:
-        send_email("Blue team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
-        return 0
-    elif test_result == 1:
-        send_email("Blue team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
-        return 1
-
-# Entrypoint
-check_contacts("main","Izhak")
+def weight_test(team_leader, pusher):
+    #res = os.exec('/bin/python3 ' + PATH_TESTS + BRANCHES_ALLOWED[3] + '/app/test.py')
+    res = 0
+    if res == SUCCESS_CODE:
+        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        return SUCCESS_CODE
+    else:
+        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        return FAILURE_CODE
