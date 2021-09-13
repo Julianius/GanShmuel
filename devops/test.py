@@ -1,6 +1,41 @@
 import smtplib
 # from typing import Counter
 
+
+def check_contacts(BRANCH_NAME,PUSHER):
+    PUSHER_EMAILS={
+        "weight_team":{
+            "matanshk":"shekel8@gmail.com",
+            "yaelkadosh":"yael260640@gmail.com",
+            "Faresbad":"fares.badran@studio.unibo.it",
+            "sapsap1":"sapiralon95@gmail.com",
+            "shaygman":"shaygman@gmail.com",
+            "Yoav Yung":"joaffzie@gmail.com"
+        },
+
+        "billing_team": {
+            "nadivravivz":"ravivnadiv2@gmail.com",
+            "naorsavorai":"naorsv@gmail.com",
+            "af176":"abigail.f176@gmail.com",
+            "kfirosb":"kfirosb@gmail.com",
+        },
+
+        "devops_team": {
+            "matanshk":"shekel8@gmail.com",
+            "Julianius":"julianmotorbreathe@gmail.com",
+            "Izhak":"izhaklatovski@gmail.com",
+        }}
+        
+    if BRANCH_NAME =="weight-staging":
+        run_tests(PUSHER_EMAILS["weight_team"]['yaelkadosh'],PUSHER_EMAILS["weight_team"][PUSHER])
+
+    elif BRANCH_NAME =="billing-staging":
+        run_tests(PUSHER_EMAILS["billing_team"]['nadivravivz'],PUSHER_EMAILS["billing_team"][PUSHER])
+    else:
+        #need to write the same for main branch
+        pass
+
+
 def send_email(SUBJECT, TEXT, TEAM_LEADER, PUSHER):
     sender_email = "bluedevopsdeveleap@gmail.com"
     rec_email = [TEAM_LEADER,PUSHER]
@@ -40,5 +75,5 @@ def run_tests(TEAM_LEADER, PUSHER):
             send_email("Blue team tests failure", "Following tests failed: " + str(failure_list), TEAM_LEADER, PUSHER)
             return 1
 
-
-run_tests("mail@gmail.com", "email@gmail.com")
+check_contacts("weight-staging","matanshk")
+#run_tests("shekel8@gmail.com", "email@gmail.com",)

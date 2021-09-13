@@ -21,6 +21,14 @@ def build_app(branch_name, merger_name, pusher):
 
     os.system('rm -rf ' + PATH + 'temp')
     os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + 'temp')
+
+##### test(branch_name, pusher)
+# CI Hardcoded
+# Every 12 hour system sends to team leads what commits were | date | hour | name | description
+# Tests - dictionary of all committers
+# Logs of CI
+# Testing container
+
     os.system('rm -rf ' + PATH + branch_name)
     os.system('mkdir -p ' + PATH + branch_name)
     os.system('mv '+ PATH + 'temp/* ' + PATH + 'temp/.* ' + PATH + branch_name + '/ 2>/dev/null')
