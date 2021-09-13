@@ -1,0 +1,50 @@
+  <html>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script>
+    function room() {
+      var room = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
+      if (room=='') room = 'general';
+      return "/api/chat/"+room;
+    }
+
+    function updateChat() {
+      $.get(room(),function(data) {
+        $("#chatbox").text(data);
+        window.setTimeout(updateChat,1500);
+      })
+    }
+
+    function sendmessage() {
+      $.post( room(), $( "#inform" ).serialize() );
+    }
+
+    $(document).ready(function() {
+      $("#chatbox").text("Loading chat...");
+      $("#sendBtn").click(sendmessage)
+      window.setTimeout(updateChat,1500);
+    });
+
+  </script>
+  <head>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+  </head>
+  <body>
+  <nav class="headNev">
+        <a class="headNevLink1" href="Index.html">  <i>Index</i></a>
+        <a class="headNevLink2" href="providers.html">Providers</a>
+        <a class="headNevLink2" href="rates.html">Rates</a>
+        <a class="headNevLink2" href="trucks.html">Trucks </a>
+    </nav>
+    <div class="contentBlock" style="top:200px ">
+    <h3> HELLO! You are Connected to server: {{ myhostname }}, IP Address: {{ myipaddr }}</h3>
+    <form id="inform" action="/api/chat" method="POST">
+      User name:<input name="username" type=text>
+      message:<input name="msg" type=text>
+      <input id="sendBtn" type="button" value="send">
+    </form>
+    <pre id="chatbox">Loading...</pre>
+    </div>
+  </body>
+</html>
