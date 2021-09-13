@@ -5,6 +5,7 @@ from GET_health import GET_health
 from GET_unknown import GET_unknown
 from GET_weight import GET_weight
 from GET_item import GET_item
+from POST_weight import POST_weight
 
 app = Flask(__name__)
 
@@ -39,7 +40,7 @@ def item_weight(id):
 
 @app.route("/weight", methods=['POST']) 
 def weight_post_weight(): 
-    return "to do"
+    return POST_weight()
 
 @app.route("/session/<id>", methods=['GET']) 
 def session_weight(id): 
