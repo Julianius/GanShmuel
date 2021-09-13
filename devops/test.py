@@ -1,4 +1,4 @@
-import smtplib
+import smtplib, os
 from billingtest import billingtest
 
 def check_contacts(BRANCH_NAME,PUSHER):
@@ -58,7 +58,69 @@ def send_email(SUBJECT, TEXT, TEAM_LEADER, PUSHER):
     print("Email has been sent to ", rec_email)
 
 
-def run_tests(TEAM_LEADER, PUSHER):
+def run_tests(TEAM_LEADER, PUSHER, BRANCH_NAME,MERGER_NAME):
+
+    ##### docker compose up (test compose) - START
+    PATH = '/GanShmuel/test/'
+    os.environ["DYNAMIC_PORT"] = "8085"
+    BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
+    if BRANCH_NAME == BRANCHES_ALLOWED[0]:
+      if MERGER_NAME == BRANCHES_ALLOWED[1]:
+        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/weight/docker-compose.yml -p main-weight up -d --build --force-recreate')
+        
+        ### weight test
+        test_result = billingtest() ## <----- WEIGHT TEST FILE
+        if test_result == 0:
+            send_email("Weight team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
+            return 0
+        elif test_result == 1:
+            send_email("Weight team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
+            return 1
+        ### end weight test
+
+      elif MERGER_NAME == BRANCHES_ALLOWED[2]:
+        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/billing/Prod/docker-compose.yml -p main-billing up -d --build --force-recreate')
+
+        ### billing test
+        test_result = billingtest() ## <----- billing TEST FILE
+        if test_result == 0:
+            send_email("Billing team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
+            return 0
+        elif test_result == 1:
+            send_email("Billing team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
+            return 1
+
+        ### end billing test
+
+    elif BRANCH_NAME == BRANCHES_ALLOWED[1]:
+        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/weight/docker-compose.yml -p weight-staging up -d --build --force-recreate')
+    
+        ### weight test
+        test_result = billingtest() ## <----- WEIGHT TEST FILE
+        if test_result == 0:
+            send_email("Weight team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
+            return 0
+        elif test_result == 1:
+            send_email("Weight team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
+            return 1
+        ### end weight test
+    
+    else:
+        os.system('docker-compose -f ' + PATH + BRANCH_NAME + '/billing/Prod/docker-compose.yml -p billing-staging up -d --build --force-recreate')
+            ### billing test
+        test_result = billingtest() ## <----- billing TEST FILE
+        if test_result == 0:
+            send_email("Billing team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
+            return 0
+        elif test_result == 1:
+            send_email("Billing team tests failure", "Some tests failed, go check your code.", TEAM_LEADER, PUSHER)
+            return 1
+
+        ### end billing test
+    ##### docker compose up (test compose) - end
+
+
+
     test_result = billingtest()
     if test_result == 0:
         send_email("Blue team tests success", "All the tests succeeded, good job!", TEAM_LEADER, PUSHER)
