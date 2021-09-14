@@ -13,12 +13,15 @@ def GET_item(id):
 		exitTime = mysql.getData("SELECT date FROM sessions WHERE direction = 'out'")
 		in_time = enterTime[0]['date']
 		out_time = exitTime[0]['date']
-		if(out_time >= in_time):
-			duration = (out_time - in_time)
-			return duration
-		
-		else:
-			print("Error time")
+
+		query="""SELECT DISTINCT t1.id, t1.weight, GROUP_CONCAT(t2.trucks_id) as trucks 
+			FROM trucks AS t1 
+			JOIN sessions as t2 
+			ON t1.truckid = t2.trucks_id
+			#WHERE t2.date BETWEEN  '{0}' AND '{2}'
+			GROUP BY t1.id;"""
+		info = mysql.getData(query.format(in_time, out_time))
+		return str(info)
 
 	except:
 		print("Error!!!")

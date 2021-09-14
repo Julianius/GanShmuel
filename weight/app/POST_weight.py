@@ -31,7 +31,7 @@ def POST_weight():
     
     elif dir == 'in' or dir == 'none':
             createNewSession(dir, force, date, weight, truck_id, product)
-            return 'Finished'
+            return 'Finished!'
         
     elif dir == 'out':
         session_id = mySQL.getData(f'select id, date from sessions where trucks_id = {truck_id} order by date desc limit 1')
@@ -40,22 +40,7 @@ def POST_weight():
     
     else:
         return 'Error in direction'
-   
-    if entry['direction']== 'out':
-        value = {
-            "id": id,
-            "truck": entry['trucks_id'],
-            "bruto": entry['bruto'],
-            "truckTara": (entry['bruto'] - entry['neto']),
-            "neto": entry['neto']
-        }
-    else:
-        value = {
-            "id": id,
-            "truck": entry['trucks_id'],
-            "bruto": entry['bruto']
-        }
-    return json.dumps(value)     
+
 def createNewSession(direction, f, date, weight, truckid, product):
     product_id = mySQL.getData(f'select id from products where product_name = "{product}" limit 1')
     data = (direction, f, date, weight, truckid, product_id[0]['id'])
