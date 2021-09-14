@@ -8,6 +8,7 @@ import os
 import openpyxl
 import calendar
 from datetime import datetime
+from werkzeug.wrappers import response
 import subprocess
 import sys
 
@@ -111,7 +112,7 @@ def ratespost():
                     mycursor.execute(f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
             except:
                 print("something went wrong check it")
-        return "hello"
+        return "Ok"
 
 
 
@@ -153,21 +154,35 @@ def trucks2(truck_id):
 def trucktime(truckid):
     time1 = request.args.get('from')
     time2 = request.args.get('to')
-    timetest1 = len(time1)
-    timetest2 = len(time2)
-    if timetest1 == 14:
-        print("good time")
-    else:
-        timestart = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    # timetest1 = len(time1)
+    # timetest2 = len(time2)
+    # if timetest1 == 14:
+    #     print("good time")
+    # else:
+    #     timestart = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     
-    if timetest2 == 14:
-        print("goodtime")
+    # if timetest2 == 14:
+    #     print("goodtime")
+    # else:
+    #     lastday = calendar.monthrange(timestart.year, timestart.month)[1]
+    #     timeend = datetime.today().replace(day=lastday, hour=0, minute=0, second=0, microsecond=0)
+
+    payload = {"from": time1, "to": time2}
+    res = requests.get(f"http://localhost:8081/testserver/{truckid}",params=payload)
+    if res.status_code == 404:
+        return Response({"404"}, status=404)
+    return res.json()
+
+
+@app.route("/testserver/123") #TEST, THIS IS NOT PART OF OUR PROJECT ONLY TEST!!!!!!
+def tiesto():
+    time1 = request.args.get('from')
+    time2 = request.args.get('to')
+    if time1 == "10" and time2 == "10":
+        return { "id": 123,"tara": 80 ,"sessions": [1,4,6,8] }
     else:
-        lastday = calendar.monthrange(timestart.year, timestart.month)[1]
-        timeend = datetime.today().replace(day=lastday, hour=0, minute=0, second=0, microsecond=0)
-    
-    lala = {"truckid": truckid, "time1": timestart, "time2" : timeend}
-    return lala
+        return "no good"
+
 
 
 
