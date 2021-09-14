@@ -124,7 +124,7 @@ def trucks():
             cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
             return Response("Ok", mimetype='text/plain')
         else:
-            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain' , status = 404)
+            return Response(f"Provider {prov_id} not found - please enter provider to the providers list", mimetype='text/plain' , status = 404)
 
     if request.method == 'GET':
         return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
@@ -149,7 +149,7 @@ def trucks2(truck_id):
             cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id):}')")
             return Response(f"changed truck number {truck_id} to provider {prov_id}", mimetype='text/plain')
         else:
-            return Response("Provider ID not found -please enter provider to the providers list", mimetype='text/plain', status= 404)
+            return Response(f"Provider {prov_id} not found -please enter provider to the providers list", mimetype='text/plain', status= 404)
 
 
 

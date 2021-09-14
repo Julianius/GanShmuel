@@ -20,12 +20,11 @@
     $(document).ready(function() {
         $('#sendBtn').click(function () {
             console.log("click");
-            var provider_id = $('#provider-id').val();
+            var provider_id = $('#provider_id').val();
             const  str = 'http://localhost:8081' + truck_id()
             $.ajax({
                 url: str ,     //Your api url
                 type: 'PUT',   //type is any HTTP method
-                dataType: 'string',
                 data:
                    {provider_id:provider_id
                 },
@@ -44,8 +43,8 @@
   <body>
   <div class="contentBlock" style="top:200px ">
 	<h1>this is a generick truck room</h1>
-    <form  action="/api/" id="provider-id" >
-      provider name:<input  type="text" name="provider_id"  >
+    <form  action="/api/"  >
+      provider id:<input id="provider_id"  type="text" name="provider_id"  >
       <input id="sendBtn" type="button" value="submit">
     </form>
       
