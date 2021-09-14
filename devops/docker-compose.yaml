@@ -10,4 +10,4 @@ services:
     ports: 
      - "8080:5000"
     environment:
-      USER: ${USER}
+     HOST_USER: ${USER}

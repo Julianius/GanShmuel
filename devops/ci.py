@@ -6,23 +6,26 @@ from monitor.script import script
 
 app = Flask(__name__, template_folder='monitor/templates')
 
-USER = os.environ.get('USER')
+USER = os.environ.get('HOST_USER')
 BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
 BRANCHES_FORBIDDEN = ['devops', 'weight', 'billing']
 REPO = 'https://github.com/Julianius/GanShmuel.git'
 PATH = '/GanShmuel/app/'
 DOCKER_COMPOSE_PATHS = { 
   'weight': '/weight/docker-compose.yml',
-  'billing': '/billing/Prod/docker-compose.yml'
+  'billing': '/billing/Prod/docker-compose.yml',
+  'testing': '/weight/docker-compose.yml'
 }
 print(str(USER))
 APPS_DB_PATHS = {
-  #'weight': '/home/' + USER + '/GanShmuel/app/julian-testing/billing/Prod',
-  'billing': '/home/' + str(USER) + '/GanShmuel/app/billing-staging/billing/Prod'
+  'weight': '/home/' + str(USER) + '/GanShmuel/app/weight-staging/weight',
+  'billing': '/home/' + str(USER) + '/GanShmuel/app/billing-staging/billing/Prod',
+  'testing': '/home/' + str(USER) + '/GanShmuel/app/julian-testing-weight/weight'
 }
 APPS_PATHS = {
-  #'weight': '/home/' + USER + '/GanShmuel/app/julian-testing/billing/Prod',
-  'billing': '/home/' + str(USER) + '/GanShmuel/app/billing-staging/billing/Prod'
+  'weight': '/home/' + str(USER) + '/GanShmuel/app/weight-staging/weight',
+  'billing': '/home/' + str(USER) + '/GanShmuel/app/billing-staging/billing/Prod',
+  'testing': '/home/' + str(USER) + '/GanShmuel/app/julian-testing-weight/weight'
 }
 
 
@@ -38,10 +41,11 @@ def run_docker_compose(port, path, path_to_db, path_to_app, name, run_down):
   os.environ["DYNAMIC_PATH_APP"] = path_to_app
   if run_down:
     os.system('docker-compose -f ' + path + ' down  -v ')
-  print('docker-compose -f ' + path + ' -p ' + name + ' up -d --force-recreate')
-  os.system('docker-compose -f ' + path + ' -p ' + name + ' up -d --force-recreate')
+  #print('docker-compose -f ' + path + ' -p ' + name + ' up -d --force-recreate')
+  os.system('docker-compose -f ' + path + ' -p ' + name + ' up -d --build --force-recreate')
 
 def build_app(data):
+  print(os.environ.get('HOST_USER'))
 
   timestamp = data.get('head_commit').get('timestamp')
   branch_name = data.get('ref').split('/')[-1]
@@ -70,23 +74,29 @@ def build_app(data):
     if branch_name == BRANCHES_ALLOWED[0]:
       if merger_branch_name == BRANCHES_ALLOWED[1]:
         #run_docker_compose('8084', PATH + branch_name + '/weight/docker-compose.yml', )
-        os.environ["DYNAMIC_PORT"] = "8084"
-        os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml -p main-weight up -d --force-recreate')
+        #os.environ["DYNAMIC_PORT"] = "8084"
+        #os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml -p main-weight up -d --force-recreate')
+        run_docker_compose('8084', PATH + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-main', False)
       elif merger_branch_name == BRANCHES_ALLOWED[2]:
 
-        run_docker_compose('8084', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-main', False)
+        run_docker_compose('8082', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-main', False)
         #os.environ["DYNAMIC_PORT"] = "8082"
         #os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml -p main-billing up -d --force-recreate')
     elif branch_name == BRANCHES_ALLOWED[1]:
-      os.environ["DYNAMIC_PORT"] = "8083"
-      os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml down  -v ') 
-      os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml -p weight-staging up -d --force-recreate')
+      #os.environ["DYNAMIC_PORT"] = "8083"
+      #os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml down  -v ') 
+      #os.system('docker-compose -f ' + PATH + branch_name + '/weight/docker-compose.yml -p weight-staging up -d --force-recreate')
+      #run_docker_compose('8083', PATH + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-staging', False)
+      print(PATH + branch_name + DOCKER_COMPOSE_PATHS['testing'])
+      print(APPS_DB_PATHS['testing'])
+      print(APPS_PATHS['testing'])
+      run_docker_compose('8083', PATH + branch_name + DOCKER_COMPOSE_PATHS['testing'], APPS_DB_PATHS['testing'], APPS_PATHS['testing'], 'julian-testing-weight', False)
     else:
       #os.environ["DYNAMIC_PORT"] = "8081"
       #os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml -p billing-staging up -d --force-recreate')
-      print(APPS_DB_PATHS['billing'])
-      print(APPS_PATHS['billing'])
-      run_docker_compose('8084', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False)
+      #print(APPS_DB_PATHS['billing'])
+      #print(APPS_PATHS['billing'])
+      run_docker_compose('8081', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False)
 
 @app.route('/monitor', methods=['GET'])
 def home():
