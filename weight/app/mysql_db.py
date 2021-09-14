@@ -25,3 +25,9 @@ class mysql_db(object):
 		cursor = connected.cursor()
 		cursor.execute(query, data)
 		connected.commit()
+  
+	def updateData(self, query):
+		connected = self.doConnect()
+		cursor = connected.cursor()
+		cursor.execute(query)
+		connected.commit()
