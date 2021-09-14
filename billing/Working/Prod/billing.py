@@ -112,7 +112,7 @@ def ratespost():
                     mycursor.execute(f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
             except:
                 print("something went wrong check it")
-        return "hello"
+        return "Ok"
 
 
 
