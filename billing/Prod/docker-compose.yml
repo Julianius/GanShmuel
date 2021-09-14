@@ -1,7 +1,7 @@
 version: '3'
-​
+
 services:
-​
+
   billingdb: 
     hostname: billingdb
     image: mysql:8.0.26
@@ -15,7 +15,7 @@ services:
             test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost:3306"]
             timeout: 20s
             retries: 10
-​
+
   billingapp:
     hostname: billingapp
     build: .
@@ -25,4 +25,3 @@ services:
       - ${DYNAMIC_PORT}:8081
     depends_on:
       - "billingdb"
-​
