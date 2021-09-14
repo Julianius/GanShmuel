@@ -38,9 +38,8 @@ def item_weight(id):
 def weight_post_weight(): 
     return POST_weight()
 
-@app.route("/session", methods=['GET']) 
-def session_weight(): 
-    id = request.args.get('id')
+@app.route("/session/<id>", methods=['GET']) 
+def session_weight(id): 
     return GET_session(id)
 
 if __name__ == '__main__':

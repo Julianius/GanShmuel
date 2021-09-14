@@ -1,28 +1,43 @@
 from mysql_db import mysql_db
-import datetime
+from datetime import datetime
 from flask import request
+import json
 
 def GET_item(id):
 	mysql = mysql_db()
- 
-	t1 = request.args.get('t1')
-	t2 = request.args.get('t2')
 
+	fromTime = request.args.get('from') if request.args.get('from') else datetime.now().strftime("%Y%m%d000000")
+	toTime = request.args.get('to') if request.args.get('to') else datetime.now().strftime("%Y%m%d%H%M%S")
+	
 	try:
-		enterTime = mysql.getData(f"SELECT date FROM sessions WHERE trucks_id = {id}")
-		exitTime = mysql.getData("SELECT date FROM sessions WHERE direction = 'out'")
-		in_time = enterTime[0]['date']
-		out_time = exitTime[0]['date']
+		if id.isdigit():
+			query = """SELECT DISTINCT t1.truckid, t1.weight, GROUP_CONCAT(t2.id) as sessions 
+					FROM trucks AS t1 
+					JOIN sessions as t2 
+					ON t1.id = t2.trucks_id
+					WHERE t2.date BETWEEN  '{0}' AND '{1}'
+					AND t1.id = '{2}'
+					GROUP BY t1.id;"""
+		
+		elif not id.isdigit():
+			query = """SELECT DISTINCT t1.id, t1.weight, GROUP_CONCAT(t3.id) as sessions 
+					FROM containers AS t1 
+					JOIN containers_has_sessions as t2
+					ON t1.id = t2.containers_id
+					JOIN sessions as t3
+					ON t2.sessions_id = t3.id
+					WHERE t3.date BETWEEN  '{0}' AND '{1}'
+					AND t1.id = '{2}'
+					GROUP BY t1.id;"""
 
-		query="""SELECT DISTINCT t1.id, t1.weight, GROUP_CONCAT(t2.trucks_id) as trucks 
-			FROM trucks AS t1 
-			JOIN sessions as t2 
-			ON t1.truckid = t2.trucks_id
-			#WHERE t2.date BETWEEN  '{0}' AND '{2}'
-			GROUP BY t1.id;"""
-		info = mysql.getData(query.format(in_time, out_time))
-		return str(info)
-
+		info = mysql.getData(query.format(fromTime, toTime, id))
+				
+		value = {
+			"id": id,
+			"tara": info[0]['weight'],
+			"sessions": info[0]['sessions'],
+		}
+		return json.dumps(value)
+	
 	except:
-		print("Error!!!")
-	return "i got the item data, ok"
+		return "Weight data is unavailable at the moment."
