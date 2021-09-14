@@ -84,6 +84,8 @@ def build_app(data):
     else:
       #os.environ["DYNAMIC_PORT"] = "8081"
       #os.system('docker-compose -f ' + PATH + branch_name + '/billing/Prod/docker-compose.yml -p billing-staging up -d --force-recreate')
+      print(APPS_DB_PATHS['billing'])
+      print(APPS_PATHS['billing'])
       run_docker_compose('8084', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False)
 
 @app.route('/monitor', methods=['GET'])
