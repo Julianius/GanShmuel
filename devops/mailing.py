@@ -24,7 +24,7 @@ CONTACT_EMAILS = {
         "Izhak": "izhaklatovski@gmail.com"
     }
 }
-SENDER_EMAIL = 'bluedevopsdeveleap@gmail.com'
+SENDER_EMAIL = 'develeapblueteum@gmail.com'
 PASSWORD = 'blue123!'
 SERVER_NAME = 'smtp.gmail.com'
 SERVER_CODE = 587
