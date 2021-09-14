@@ -133,7 +133,7 @@ def trucks():
 @app.route('/trucks.html/<truck_id>', methods=['PUT'])
 def trucks2(truck_id):
     if request.method == 'PUT':
-        prov_id = request.form['provider-id']
+        prov_id = request.form['provider_id']
         billingdb = mysql.connector.connect(
             host="billingdb",
             user="root",
