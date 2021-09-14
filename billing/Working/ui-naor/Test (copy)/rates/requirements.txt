@@ -1,0 +1,4 @@
+flask
+MySQL-connector-python
+requests
+openpyxl
