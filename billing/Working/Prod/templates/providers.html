@@ -11,7 +11,7 @@
     function updateChat() {
       $.get(room(),function(data) {
         $("#chatbox").text(data);
-        window.setTimeout(updateChat,1500);
+        window.setTimeout(updateChat,15000);
       })
     }
 
@@ -22,7 +22,7 @@
     $(document).ready(function() {
       $("#chatbox").text("Loading Providers...");
       $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat,1500);
+      window.setTimeout(updateChat,15000);
     });
 
   </script>
