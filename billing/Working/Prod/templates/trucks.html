@@ -1,0 +1,70 @@
+  <html>
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+
+    <script type="text/javascript">
+    function room() {
+      var room = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
+      return "/api/"+room;
+    }
+
+    function updateChat() {
+      $.get(room(),function(data) {
+        $("#chatbox").text(data);
+        window.setTimeout(updateChat,1500);
+      })
+    }
+
+    function sendmessage() {
+      $.post( room(), $( "#inform" ).serialize() );
+    }
+
+    $(document).ready(function() {
+      $("#chatbox").text("Loading trucks...");
+      $("#sendBtn").click(sendmessage)
+      $("#sendBtn2").click(function () {
+        var sendData = $('#inform2').val();
+        $.ajax({
+          url: 'http://localhost:8081/api/trucks.html',    //Your api url
+          type: 'PUT',   //type is any HTTP method
+          data: {
+            data: sendData
+          },      //Data as js object
+          success: function () {
+          }
+        })
+        console.log("click");
+
+        window.setTimeout(updateChat, 1500);
+      });
+    });
+
+  </script>
+  <head>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+  </head>
+  <body>
+  <nav class="headNev">
+        <a class="headNevLink1" href="Index.html">  <i>Index</i></a>
+        <a class="headNevLink2" href="providers.html">Providers</a>
+        <a class="headNevLink2" href="rates.html">Rates</a>
+        <a class="headNevLink2" href="trucks.html">Trucks </a>
+    </nav>
+  <div class="contentBlock" style="top:200px ">
+    <form id="inform" action="/api/" method="POST">
+      Provider Id:<input name="Provider-Id" type=text>
+      Truck Id:<input name="Truck-Id" type=text>
+      <input id="sendBtn" type="button" value="send">
+    </form>
+    <form id="inform2" action="/api/" method="PUT">
+      Provider Name:<input name="Provider-Name" type=text>
+      Truck Id:<input name="Truck-Id" type=text>
+      <input id="sendBtn2" type="button" value="update">
+    </form>
+    </div>
+    <pre id="chatbox"> Please enter truck license plate and provider id </pre>
+  </body>
+</html>
