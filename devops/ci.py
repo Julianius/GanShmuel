@@ -18,11 +18,11 @@ DOCKER_COMPOSE_PATHS = {
 print(str(USER))
 APPS_DB_PATHS = {
   #'weight': '/home/' + USER + '/GanShmuel/app/julian-testing/billing/Prod',
-  'billing': '/home/' + str(USER) + '/GanShmuel/app/julian-testing/billing/Prod'
+  'billing': '/home/' + str(USER) + '/GanShmuel/app/billing-staging/billing/Prod'
 }
 APPS_PATHS = {
   #'weight': '/home/' + USER + '/GanShmuel/app/julian-testing/billing/Prod',
-  'billing': '/home/' + str(USER) + '/GanShmuel/app/julian-testing/billing/Prod'
+  'billing': '/home/' + str(USER) + '/GanShmuel/app/billing-staging/billing/Prod'
 }
 
 
