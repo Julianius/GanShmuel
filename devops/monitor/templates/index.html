@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <script>fetch('../open_ports.txt')
+    <script>fetch('/monitor/open_ports.txt')
         .then(response => response.text())
         .then(data => {
               for(let i=0 ; i<=12 ; i+=2) {

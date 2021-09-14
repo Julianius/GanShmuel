@@ -89,10 +89,12 @@ def script():
 
    f.close()
 
-def loop():
-   while True:
-      script()
-      time.sleep(5)
+script()
 
-loop()
+# def loop():
+#    while True:
+#       script()
+#       time.sleep(5)
+
+# loop()
 
