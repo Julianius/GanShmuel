@@ -2,9 +2,6 @@ from requests.api import request
 from mysql_db import mysql_db
 from datetime import datetime
 
-def enum(**enums):
-    return type('Enum', (), enums)
-
 def GET_weight(request):
     mySQL = mysql_db()
     try:
