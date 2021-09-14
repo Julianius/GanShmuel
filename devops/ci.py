@@ -8,6 +8,7 @@ import subprocess
 
 app = Flask(__name__, template_folder='monitor/templates')
 
+
 USER = os.environ.get('HOST_USER')
 BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
 BRANCHES_FORBIDDEN = ['devops', 'weight', 'billing']
@@ -65,30 +66,38 @@ def build_app(data):
     os.system('rm -rf ' + PATH + 'temp')
 
     add_to_committer_report(timestamp, branch_name, merger_branch_name, pusher)
-
+    
+    ####
+    DEPLOY_FLAG=False
+    ####
+    
     if branch_name == BRANCHES_ALLOWED[0]:
       if merger_branch_name == BRANCHES_ALLOWED[1]:
         run_docker_compose('8084', PATH + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-main', False)
+
       elif merger_branch_name == BRANCHES_ALLOWED[2]:
         run_docker_compose('8082', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-main', False)
     elif branch_name == BRANCHES_ALLOWED[1]:
       run_docker_compose('8083', PATH + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-staging', False)
+      cont_name="weight-staging_app_1"
+      deploy_result = subprocess.check_output('docker ps', shell=True)
+      if cont_name in deploy_result:
+        DEPLOY_FLAG=True
     else:
       run_docker_compose('8081', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False)
+      cont_name="billing-staging_billingapp_1"
+      deploy_result = subprocess.check_output('docker ps', shell=True)
+      if cont_name in deploy_result:
+        DEPLOY_FLAG=True
 
-
-
-
-# s = subprocess.check_output('docker ps', shell=True)
-# print(s)
-
-    # if test_res == SUCCESS_CODE and deploysuccess :
-    #   send success mail
-    # elif test_res == SUCCESS_CODE and deployfail :
-    #   send test success deploy fail email
-    # else:
-    #   send test fail email
-
+#####
+      #if test_res == SUCCESS_CODE and DEPLOY_FLAG == True :
+        #   send success mail
+      #elif test_res == SUCCESS_CODE:
+        #   send test success deploy fail email
+      #else:
+        #   send test fail email
+#####
 
 @app.route('/monitor', methods=['GET'])
 def home():
