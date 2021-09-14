@@ -4,15 +4,16 @@ import mysql.connector
 import json
 import requests
 import random
-import os 
+import os
 import openpyxl
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return "Welcome to Billing Blue Site"
-    #Add Navigiation bar to our APIs
+    # Add Navigiation bar to our APIs
 
 
 @app.route('/health.html')
@@ -28,18 +29,18 @@ def health():
 def provider():
     return render_template('providers.html')
 
+
 @app.route('/rates.html')
 def rates():
     mydir = os.listdir("/in")
-    return render_template('rates.html',mydir=mydir)
+    return render_template('rates.html', mydir=mydir)
 
-@app.route('/trucks.html')
+@app.route(('/trucks.html'))
 def truck():
     return render_template('trucks.html')
-@app.route('/trucks.html/<truck_number>')
-def truck_id(truck_number):
+@app.route(('/trucks.html/<truck_id>'))
+def truck_id(truck_id):
     return render_template('truck_id.html')
-
 
 
 @app.route('/api/providers.html', methods=['GET', 'POST'])
@@ -70,19 +71,18 @@ def providers():
         return Response("enter provider name:", mimetype='text/plain')
 
 
-
-@app.route('/api/rates.html', methods=['POST','GET'])
+@app.route('/api/rates.html', methods=['POST', 'GET'])
 def ratespost():
     if request.method == 'GET':
         mycursor = billingdb.cursor()
         mycursor.execute("""select * from Rates""")
-        row_headers=[x[0] for x in mycursor.description] 
+        row_headers = [x[0] for x in mycursor.description]
         rv = mycursor.fetchall()
-        json_data=[]
+        json_data = []
         for result in rv:
-            json_data.append(dict(zip(row_headers,result)))
-        jsonout = json.dumps(json_data) 
-        return jsonout #Check with chris if the JSON type is required on response
+            json_data.append(dict(zip(row_headers, result)))
+        jsonout = json.dumps(json_data)
+        return jsonout  # Check with chris if the JSON type is required on response
     if request.method == 'POST':
         mycursor = billingdb.cursor()
         filename = request.form['msgfile']
@@ -90,10 +90,10 @@ def ratespost():
         sh = wrkbk.active
         semilist = []
         mylist = []
-        for i in range(2, sh.max_row+1):
+        for i in range(2, sh.max_row + 1):
             mylist.append(semilist)
-            semilist=[]
-            for j in range(1, sh.max_column+1):
+            semilist = []
+            for j in range(1, sh.max_column + 1):
                 cell_obj = sh.cell(row=i, column=j)
                 semilist.append(str(cell_obj.value))
         mylist.pop(0)
@@ -104,14 +104,14 @@ def ratespost():
                 if myresult != []:
                     mycursor.execute(f"""UPDATE Rates SET rate={i[1]} WHERE product_id="{i[0]}" """)
                 else:
-                    mycursor.execute(f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
+                    mycursor.execute(
+                        f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
             except:
                 print("something went wrong check it")
         return "hello"
 
 
-
-@app.route('/api/trucks.html', methods=['GET', 'POST', 'PUT'])
+@app.route('/api/trucks.html', methods=['GET', 'POST'])
 def trucks():
     if request.method == 'POST':
         prov_id = request.form['Provider-Id']
@@ -124,7 +124,7 @@ def trucks():
             cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
             return Response("Ok", mimetype='text/plain')
         else:
-            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain')
+            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain' , status = 404)
 
     if request.method == 'GET':
         return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
@@ -132,23 +132,29 @@ def trucks():
 
 @app.route('/trucks.html/<truck_id>', methods=['PUT'])
 def trucks2(truck_id):
-    prov_id = request.form['provider-id']
-    billingdb = mysql.connector.connect(
-        host="billingdb",
-        user="root",
-        password="1234!",
-        database='billdb',
-    )
-    cursor = billingdb.cursor()
-    cursor.execute("USE billdb")
-    cursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
-    results = cursor.fetchall()
-    if results:
-        cursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
-        cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id):}')")
-        return Response(f"changed truck number {truck_id } to provider {prov_id}", mimetype='text/plain')
-    else:
-         return Response("Provider ID not found -please enter provider to the providers list", mimetype='text/plain')
+    if request.method == 'PUT':
+        prov_id = request.form['provider-id']
+        billingdb = mysql.connector.connect(
+            host="billingdb",
+            user="root",
+            password="1234!",
+            database='billdb',
+        )
+        cursor = billingdb.cursor()
+        cursor.execute("USE billdb")
+        cursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
+        results = cursor.fetchall()
+        if results:
+            cursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
+            cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id):}')")
+            return Response(f"changed truck number {truck_id} to provider {prov_id}", mimetype='text/plain')
+        else:
+            return Response("Provider ID not found -please enter provider to the providers list", mimetype='text/plain', status= 404)
+
+
+
+
+
 
 if __name__ == '__main__':
     try:

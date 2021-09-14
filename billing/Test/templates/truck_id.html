@@ -1,11 +1,53 @@
  <html>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+    function truck_id() {
+      var truck_id = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
+      return "/trucks.html/"+truck_id;
+    }
+
+    function updateChat() {
+      $.get(room(),function(data) {
+        $("#chatbox").text(data);
+        window.setTimeout(updateChat,1500);
+      })
+    }
+
+
+
+    $(document).ready(function() {
+        $('#sendBtn').click(function () {
+            console.log("click");
+            var sendData = $('#provider-id').val();
+            const  str = 'http://localhost:8081' + truck_id()
+            $.ajax({
+                url: str ,     //Your api url
+                type: 'PUT',   //type is any HTTP method
+                dataType: 'string',
+                data:
+                   {data:sendData
+                },
+                success: function () {
+                }
+            })
+            window.setTimeout(updateChat, 1500);
+        });
+    });
+
+
+    </script>
   <head>
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
   </head>
   <body>
   <div class="contentBlock" style="top:200px ">
-	<h1>this is a generick truck room</h1>    
+	<h1>this is a generick truck room</h1>
+    <form  action="/api/"  >
+      provider name:<input id="provider-id" type="text" name="provider-id" value="provider-id" >
+      <input id="sendBtn" type="button" value="submit">
+    </form>
       
     </div>
     <pre id="chatbox"> Please enter truck license plate and provider id </pre>
