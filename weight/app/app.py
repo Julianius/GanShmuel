@@ -1,4 +1,4 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, render_template
 import requests
 from GET_health import GET_health
 from GET_unknown import GET_unknown
@@ -12,7 +12,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Flask app - Blue team Weight "
+    # return "Flask app - Blue team Weight "
+    return render_template('/UI/Basic.html')
 
 @app.route("/health", methods=['GET'])
 def health():
@@ -34,13 +35,18 @@ def batch_weight(file):
 def item_weight(id): 
     return GET_item(id)
 
+# @app.route("/weight", methods=['GET','POST']) 
+# def weight_post_weight(): 
+#     if request.method == 'POST':
+#         return render_template('./UI/GET_weight.html')
+
+
 @app.route("/weight", methods=['POST']) 
 def weight_post_weight(): 
     return POST_weight()
 
-@app.route("/session", methods=['GET']) 
-def session_weight(): 
-    id = request.args.get('id')
+@app.route("/session/<id>", methods=['GET']) 
+def session_weight(id): 
     return GET_session(id)
 
 if __name__ == '__main__':
