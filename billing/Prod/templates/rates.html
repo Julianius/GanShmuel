@@ -12,7 +12,7 @@
     function updateChat() {
       $.get(room(),function(data) {
         $("#chatbox").text(data);
-        window.setTimeout(updateChat,2000);
+        window.setTimeout(updateChat,15000);
       })
     }
 
@@ -23,7 +23,7 @@
     $(document).ready(function() {
       $("#chatbox").text("Loading Rates...");
       $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat,2000);
+      window.setTimeout(updateChat,15000);
     });
 
   </script>
