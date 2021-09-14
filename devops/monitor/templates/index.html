@@ -4,50 +4,108 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Commit Report</title>
+    <style>
+
+    h1 {
+        text-align: center;
+        font-family: sans-serif;
+        font-size: 5rem;
+    }
+
+    .main {
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    .container {
+        border-radius: 50%;
+        display: inline-block;
+        height: 12rem;
+        width: 12rem;
+        position: relative;
+        margin: 1rem;
+    }
+
+    .inner-container {
+        background-color: white;
+        border-radius: 50%;
+        height: 9rem;
+        width: 9rem;
+        position: absolute;
+        top: 1.5rem;
+        left: 1.5rem;
+        text-align: center;
+        font-family: sans-serif;
+    }
+    
+    </style>
+    <title>Monitor</title>
 </head>
 <body>
     <h1>Monitor</h1>
 
-    <div>
-        <div class="port-container" id="8080">
-            <h2>8080</h2>
-            <div class="image"></div>
-            <h3>status</h3>
+    <div class="main">
+        <div class="container" id="8080">
+            <div class="inner-container">
+                <h3>8080</h3>
+                <h3>CI</h3>
+            </div>
         </div>
-        <div class="port-container" id="8081">
-            <h2>8081</h2>
-            <div class="image"></div>
-            <h3>status</h3>
+        <div class="container" id="8081">
+            <div class="inner-container">
+                <h3>8081</h3>
+                <h3>Billing staging</h3>
+            </div>
         </div>
-        <div class="port-container" id="8082">
-            <h2>8082</h2>
-            <div class="image"></div>
-            <h3>status</h3>
+        <div class="container" id="8082">
+            <div class="inner-container">
+                <h3>8082</h3>
+                <h3>Billing production</h3>
+            </div>
         </div>
-        <div class="port-container" id="8083">
-            <h2>8083</h2>
-            <div class="image"></div>
-            <h3>status</h3>
+        <div class="container" id="8083">
+            <div class="inner-container">
+                <h3>8083</h3>
+                <h3>Weight staging</h3>
+            </div>
         </div>
-        <div class="port-container" id="8084">
-            <h2>8084</h2>
-            <div class="image"></div>
-            <h3>status</h3>
+        <div class="container" id="8084">
+            <div class="inner-container">
+                <h3>8084</h3>
+                <h3>Weight production</h3>
+            </div>
         </div>
-        <div class="port-container" id="8085">
-            <h2>8085</h2>
-            <div class="image"></div>
-            <h3>status</h3>
+        <div class="container" id="8085">
+            <div class="inner-container">
+                <h3>8085</h3>
+                <h3>Testing</h3>
+            </div>
         </div>
-        <div class="port-container" id="8086">
-            <h2>8086</h2>
-            <div class="image"></div>
-            <h3>status</h3>
-        </div>
-    </div>
 
-    <script src="../script.js" type="module"></script>
+    </div> 
+
+
+
+
+
+
+
+
+    <script>
+    fetch('/monitor/open_ports.txt')
+        .then(response => response.text())
+        .then(data => {
+              for(let i=0 ; i<=10 ; i+=2) {
+                  let port = 8080 + (i/2);
+                  if(data[i] == "1") {
+                      document.getElementById(port).style.backgroundColor = "#00D100";
+                  } else {
+                      document.getElementById(port).style.backgroundColor = "#FF2E2E";
+                  }
+              }
+          }
+        );
+     
+        </script>
 </body>
 </html>

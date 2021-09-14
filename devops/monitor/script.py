@@ -1,4 +1,5 @@
 import socket
+import time
 
 def script():
    open("open_ports.txt", 'w').close()
@@ -75,7 +76,6 @@ def script():
 
    a_socket.close()
 
-
    a_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
    location = ("18.157.175.199", 8086)
@@ -88,3 +88,13 @@ def script():
    a_socket.close()
 
    f.close()
+
+script()
+
+# def loop():
+#    while True:
+#       script()
+#       time.sleep(5)
+
+# loop()
+
