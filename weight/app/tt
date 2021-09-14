@@ -17,13 +17,12 @@ class BasicTestCase(unittest.TestCase):
                 response = tester.get('/unknown', content_type='html/text')
                 print(response.status_code)
                 self.assertEqual(response.status_code, 200)
-                self.assertTrue(b'Weight data is unavailable at the moment.' not in response.data)
+                self.assertTrue(b'Weight data is unavailable at the moment' not in response.data)
         def test_POST_batch_weight(self):
                 tester = app.test_client(self)
-                response = tester.get('/batch-weight/test', content_type='html/text')
+                response = tester.get('/batch-weight/test.csv', content_type='html/text')
                 print(response.status_code)
                 self.assertEqual(response.status_code, 200)
-                print(response.data)
                 self.assertTrue(b'Has been added to database.' in response.data)
         def test_GET_weight_weight(self):
                 tester = app.test_client(self)
