@@ -18,7 +18,7 @@ def checkhealth():
     return test
 
 def checkprovider():
-        URL = "http://localhost:8081/api/providers.html"
+        URL = "http://localhost:8081/api/provider"
         with open(f'testfile/testfile.txt', "r") as testfile:
             readtest=testfile.readlines()
         for line in range(len(readtest)):
