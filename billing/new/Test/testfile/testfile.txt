@@ -1,6 +1,0 @@
-{"POST":{"provider":"aqtta7"},"value":{"id":"valuetochange","name":"aqtta7"},"return":{"id":"valuetochange","name":"aqtta7"}}
-{"POST":{"provider":"aqtta7"},"value":{"id":"valuetochange","name":"aqtta7"},"return":"name exist"}
-{"POST":{"provider":"ravivttr7"},"value":{"id":"valuetochange","name":"ravivttr7"},"return":{"id":"valuetochange","name":"ravivttr7"}}
-
-{"POST":{"msgfile":"rates.xlsx"},"value":"ok","return":"ok"}
-{"POST":{"msgfile":"norates.xlsx"},"value":"ok","return":"ok"}

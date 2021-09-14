@@ -91,7 +91,11 @@ def ratespost():
     if request.method == 'POST':
         mycursor = billingdb.cursor()
         filename = request.form['msgfile']
-        wrkbk = openpyxl.load_workbook(f"/in/{filename}")
+        try:
+            wrkbk = openpyxl.load_workbook(f"/in/{filename}")
+        except openpyxl.utils.exceptions.InvalidFileException:
+            return "no such a file"
+
         sh = wrkbk.active
         semilist = []
         mylist = []
@@ -112,15 +116,11 @@ def ratespost():
                     mycursor.execute(f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
             except:
                 print("something went wrong check it")
-<<<<<<< HEAD
-        return "ok"
-=======
         return "Ok"
->>>>>>> 8497beee2d57ce9bad90c04ac886adc242c8c2e0
 
 
 
-@app.route('/api/trucks.html', methods=['GET', 'POST',])
+@app.route('/api/trucks.html', methods=['GET', 'POST', 'PUT'])
 def trucks():
     if request.method == 'POST':
         prov_id = request.form['Provider-Id']
@@ -133,15 +133,15 @@ def trucks():
             cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
             return Response("Ok", mimetype='text/plain')
         else:
-            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain',status=400)
+            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain')
 
     if request.method == 'GET':
-        return Response("Please enter truck license plate and provider id:", mimetype='text/plain',status=400)
+        return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
 
 
 @app.route('/trucks.html/<truck_id>', methods=['PUT'])
 def trucks2(truck_id):
-    prov_id = request.form['provider_id']
+    prov_id = request.form['provider-id']
     mycursor = billingdb.cursor()
     mycursor.execute("USE billdb")
     mycursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
@@ -151,7 +151,7 @@ def trucks2(truck_id):
         mycursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id):}')")
         return Response(f"changed truck number {truck_id } to provider {prov_id}", mimetype='text/plain')
     else:
-         return Response(f"Provider {prov_id} not found -please enter provider to the providers list", mimetype='text/plain',status=400)
+         return Response("Provider ID not found -please enter provider to the providers list", mimetype='text/plain')
 
 
 @app.route('/truck/<truckid>')
@@ -171,7 +171,7 @@ def trucktime(truckid):
     #     lastday = calendar.monthrange(timestart.year, timestart.month)[1]
     #     timeend = datetime.today().replace(day=lastday, hour=0, minute=0, second=0, microsecond=0)
 
-    payload = {"t1": time1, "t2": time2}
+    payload = {"from": time1, "to": time2}
     res = requests.get(f"http://localhost:8081/testserver/{truckid}",params=payload)
     if res.status_code == 404:
         return Response({"404"}, status=404)
@@ -180,8 +180,8 @@ def trucktime(truckid):
 
 @app.route("/testserver/123") #TEST, THIS IS NOT PART OF OUR PROJECT ONLY TEST!!!!!!
 def tiesto():
-    time1 = request.args.get('t1')
-    time2 = request.args.get('t2')
+    time1 = request.args.get('from')
+    time2 = request.args.get('to')
     if time1 == "10" and time2 == "10":
         return { "id": 123,"tara": 80 ,"sessions": [1,4,6,8] }
     else:

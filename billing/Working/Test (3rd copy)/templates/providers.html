@@ -1,8 +1,4 @@
-
-<html>
-
-
-
+  <html>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -24,7 +20,7 @@
     }
 
     $(document).ready(function() {
-      $("#chatbox").text("Loading Rates...");
+      $("#chatbox").text("Loading Providers...");
       $("#sendBtn").click(sendmessage)
       window.setTimeout(updateChat,1500);
     });
@@ -41,14 +37,11 @@
         <a class="headNevLink2" href="trucks.html">Trucks </a>
     </nav>
   <div class="contentBlock" style="top:200px ">
-    <form id="inform" action="/api/chat" method="POST">
-      <pre> Choose File to Upload from this list: {{ mydir }} </pre>
-      <input name="msgfile" type=text>
-      <input id="sendBtn" type="button" value="send">
+    <form id="inform" action="/api/provider.html" method="POST">
+      provider name:<input name="provider" type=text>
+      <input id="sendBtn" type="button" value="submit">
     </form>
-
-    <h3> These are the current rates: </h3>
-    <pre id="chatbox"></pre>
-  </div>
+    <pre id="box">enter new provider</pre>
+      </div>
   </body>
 </html>

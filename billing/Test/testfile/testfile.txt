@@ -1,0 +1,15 @@
+{"POST":{"provider":"yael1"},"value":{"id":"valuetochange","name":"avi"},"return":{"id":"valuetochange","name":"yael1"}}
+{"POST":{"provider":"yael1"},"value":{"id":"valuetochange","name":"avi"},"return":"name exist"}
+{"POST":{"provider":"avi221"},"value":{"id":"valuetochange","name":"avi22"},"return":{"id":"valuetochange","name":"avi221"}}
+
+{"POST":{"msgfile":"to_test_file/rates.xlsx"},"value":"ok","return":"Ok"}
+{"POST":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}
+{"POST":{"msgfile":"to_test_file/ratesaftepost.xlsx"},"value":"ok","return":"Ok"}
+
+
+{"POST":{"msgfile":"rates.xlsx"},"value":"ok","return":"Ok"}
+{"POST":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}
+{"PUT":{"msgfile":"rates.xlsx"},"value":"ok","return":"Ok"}
+{"PUT":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}
+{"GET":{"msgfile":"rates.xlsx"},"value":"ok","return":"Ok"}
+{"GET":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}

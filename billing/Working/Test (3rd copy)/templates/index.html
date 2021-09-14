@@ -5,6 +5,7 @@
   <script>
     function room() {
       var room = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
+      if (room=='') room = 'general';
       return "/api/"+room;
     }
 
@@ -20,7 +21,7 @@
     }
 
     $(document).ready(function() {
-      $("#chatbox").text("Loading Providers...");
+      $("#chatbox").text("Loading chat...");
       $("#sendBtn").click(sendmessage)
       window.setTimeout(updateChat,1500);
     });
@@ -36,12 +37,13 @@
         <a class="headNevLink2" href="rates.html">Rates</a>
         <a class="headNevLink2" href="trucks.html">Trucks </a>
     </nav>
-  <div class="contentBlock" style="top:200px ">
-    <form id="inform" action="/api/chat" method="POST">
-      provider name:<input name="provider" type=text>
-      <input id="sendBtn" type="button" value="submit">
+    <div class="contentBlock" style="top:200px ">
+    <h3> HELLO! You are Connected to server: {{ myhostname }}, IP Address: {{ myipaddr }}</h3>
+    <form id="inform" action="/api/index.html" method="POST">
+      User name:<input name="username" type=text>
+      message:<input name="msg" type=text>
+      <input id="sendBtn" type="button" value="send">
     </form>
-    <pre id="chatbox">enter new provider</pre>
-      </div>
+    </div>
   </body>
 </html>
