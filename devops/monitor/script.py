@@ -1,7 +1,11 @@
 import socket
 import time
 
+<<<<<<< HEAD
 def monitor():
+=======
+def script():
+>>>>>>> 628b9e15eed277c9cf1aa5c21c849d3e63168fb0
    open("open_ports.txt", 'w').close()
    f = open("open_ports.txt", "a")
 
@@ -88,6 +92,7 @@ def monitor():
 
    a_socket.close()
 
+<<<<<<< HEAD
    f.close()
 
 def loop():
@@ -96,3 +101,6 @@ def loop():
       time.sleep(5)
 
 loop()
+=======
+   f.close()
+>>>>>>> 628b9e15eed277c9cf1aa5c21c849d3e63168fb0
