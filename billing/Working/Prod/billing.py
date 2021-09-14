@@ -4,7 +4,7 @@ import mysql.connector
 import json
 import requests
 import random
-import os 
+import os
 import openpyxl
 import calendar
 from datetime import datetime
@@ -14,10 +14,11 @@ import sys
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
-    #Add Navigiation bar to our APIs
+    # Add Navigiation bar to our APIs
 
 
 @app.route('/health')
@@ -33,14 +34,17 @@ def health():
 def provider():
     return render_template('providers.html')
 
+
 @app.route('/rates')
 def rates():
     mydir = os.listdir("/in")
     return render_template('rates.html', mydir=mydir)
 
+
 @app.route('/trucks')
 def truck():
     return render_template('trucks.html')
+
 
 @app.route('/trucks/<truck_number>')
 def truck_id(truck_number):
@@ -75,19 +79,18 @@ def providers():
         return Response("enter provider name:", mimetype='text/plain')
 
 
-
-@app.route('/api/rates', methods=['POST','GET'])
+@app.route('/api/rates', methods=['POST', 'GET'])
 def ratespost():
     if request.method == 'GET':
         mycursor = billingdb.cursor()
         mycursor.execute("""select * from Rates""")
-        row_headers=[x[0] for x in mycursor.description] 
+        row_headers = [x[0] for x in mycursor.description]
         rv = mycursor.fetchall()
-        json_data=[]
+        json_data = []
         for result in rv:
-            json_data.append(dict(zip(row_headers,result)))
-        jsonout = json.dumps(json_data) 
-        return jsonout #Check with chris if the JSON type is required on response
+            json_data.append(dict(zip(row_headers, result)))
+        jsonout = json.dumps(json_data)
+        return jsonout  # Check with chris if the JSON type is required on response
     if request.method == 'POST':
         mycursor = billingdb.cursor()
         filename = request.form['msgfile']
@@ -99,10 +102,10 @@ def ratespost():
         sh = wrkbk.active
         semilist = []
         mylist = []
-        for i in range(2, sh.max_row+1):
+        for i in range(2, sh.max_row + 1):
             mylist.append(semilist)
-            semilist=[]
-            for j in range(1, sh.max_column+1):
+            semilist = []
+            for j in range(1, sh.max_column + 1):
                 cell_obj = sh.cell(row=i, column=j)
                 semilist.append(str(cell_obj.value))
         mylist.pop(0)
@@ -113,16 +116,14 @@ def ratespost():
                 if myresult != []:
                     mycursor.execute(f"""UPDATE Rates SET rate={i[1]} WHERE product_id="{i[0]}" """)
                 else:
-                    mycursor.execute(f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
+                    mycursor.execute(
+                        f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
             except:
                 print("something went wrong check it")
         return "Ok"
 
 
-
-
-@app.route('/api/trucks', methods=['GET', 'POST',])
-
+@app.route('/api/trucks', methods=['GET', 'POST', ])
 def trucks():
     if request.method == 'POST':
         prov_id = request.form['Provider-Id']
@@ -135,7 +136,8 @@ def trucks():
             cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
             return Response("Ok", mimetype='text/plain')
         else:
-            return Response("Provider not found - please enter provider to the providers list", mimetype='text/plain')
+            return Response(f"Provider {prov_id} not found - please enter provider to the providers list",
+                            mimetype='text/plain')
 
     if request.method == 'GET':
         return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
@@ -151,13 +153,14 @@ def trucks2(truck_id):
     if results:
         mycursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
         mycursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id):}')")
-        return Response(f"changed truck number {truck_id } to provider {prov_id}", mimetype='text/plain')
+        return Response(f"changed truck number {truck_id} to provider {prov_id}", mimetype='text/plain')
     else:
-         return Response("Provider ID not found -please enter provider to the providers list", mimetype='text/plain')
+        return Response(f"Provider {prov_id} not found -please enter provider to the providers list",
+                        mimetype='text/plain')
 
 
-@app.route('/truck/<truckid>')
-def trucktime(truckid):
+@app.route('/truck/<truck_id>')
+def trucktime(truck_id):
     time1 = request.args.get('from')
     time2 = request.args.get('to')
     # timetest1 = len(time1)
@@ -166,7 +169,7 @@ def trucktime(truckid):
     #     print("good time")
     # else:
     #     timestart = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    
+
     # if timetest2 == 14:
     #     print("goodtime")
     # else:
@@ -174,38 +177,83 @@ def trucktime(truckid):
     #     timeend = datetime.today().replace(day=lastday, hour=0, minute=0, second=0, microsecond=0)
 
     payload = {"from": time1, "to": time2}
-    res = requests.get(f"http://localhost:8081/testserver/{truckid}",params=payload)
+    res = requests.get(f"http://localhost:8081/testserver/{truck_id}", params=payload)
     if res.status_code == 404:
         return Response({"404"}, status=404)
     return res.json()
 
+#json
+@app.route('/bill/<provider_id>')
+def trucktime(provider_id):
+    truck_counter = 0
+    session_count = 0
+    product_dic = {}
+    time1 = request.args.get('from') #check times
+    time2 = request.args.get('to')
+    payload = {"from": time1, "to": time2}
+    mycursor = billingdb.cursor()
+    mycursor.execute("USE billdb")
+    mycursor.execute(f"SELECT id FROM Trucks WHERE id='{str(provider_id)}'")
+    result = mycursor.fetchall()
+    if result:
+        for truck in result:
+            res = requests.get(f"http://localhost:8081/item/{truck}", params=payload)
+            if res.text == "Weight data is unavailable at the  # check what item respons if empty":
+                truck_counter += 1
+                sessions = res.json()['sessions']
+                session_count += len(sessions)
+                for session in sessions:
+                    r_session = requests.get(f"http://localhost:8081/session/{session}").json()
+                    product = r_session['product']
+                    neto = int(r_session['neto'])
+                    if product in product_dic.keys():
+                        product_dic[product]['amount'] += neto
+                        product_dic[product]['count'] += 1
+                    else:
+                        mycursor.execute(
+                            f"""SELECT Rate FROM Rates WHERE Scope='{provider_id}'AND Product='{product}' """)
+                        rate = int(mycursor.fetchall()[0])
+                        if result:
+                            product_dic.update({product: {'amount': neto, 'count': 1 , 'rate': rate}})
+                        else:
+                            mycursor.execute(f"""SELECT Rate FROM Rates WHERE Scope='All', Product = '{product}'""")
+                            rate = int(mycursor.fetchall()[0])
+                            product_dic.update({product: {'amount': neto,'count':1,'rate':rate}})
+            else:
+                continue
 
-@app.route("/testserver/123") #TEST, THIS IS NOT PART OF OUR PROJECT ONLY TEST!!!!!!
+                
+
+
+    else:
+        return Response(f"Provider {provider_id} not found - please enter provider to the providers list",
+                        mimetype='text/plain', status=400)
+
+
+@app.route("/testserver/123")  # TEST, THIS IS NOT PART OF OUR PROJECT ONLY TEST!!!!!!
 def tiesto():
     time1 = request.args.get('from')
     time2 = request.args.get('to')
     if time1 == "10" and time2 == "10":
-        return { "id": 123,"tara": 80 ,"sessions": [1,4,6,8] }
+        return {"id": 123, "tara": 80, "sessions": [1, 4, 6, 8]}
     else:
         return "no good"
-
-
 
 
 if __name__ == '__main__':
     try:
         billingdb = mysql.connector.connect(
-        host="billingdb",
-        user="root",
-        password="1234!",
-    )
+            host="billingdb",
+            user="root",
+            password="1234!",
+        )
         mycursor = billingdb.cursor()
         mycursor.execute("use billdb")
         billingdb.commit()
-        
+
     except:
         print("failed to connect to DB")
-    
+
     # HOST="billingdb"
     # COMMAND="mysqldump -u root -p 1234! -p billdb > /db/newdb.sql"
     # ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],
