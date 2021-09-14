@@ -9,3 +9,5 @@ services:
       - /home/${USER}/GanShmuel/test:/GanShmuel/test
     ports: 
      - "8080:5000"
+    environment:
+      USER: ${USER}
