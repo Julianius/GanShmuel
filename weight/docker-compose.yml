@@ -14,7 +14,7 @@ services:
     image: mysql:8
     #container_name: mysql_db_weight
     volumes: 
-      - "./mysql-db/one-db.sql:/docker-entrypoint-initdb.d/one-db.sql"
+      - ${DYNAMIC_PATH_DB}/mysql-db:/docker-entrypoint-initdb.d
     environment: 
       - MYSQL_ROOT_PASSWORD=123456
     healthcheck:
