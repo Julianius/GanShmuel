@@ -5,10 +5,10 @@ services:
   billingdb: 
     hostname: billingdb
     image: mysql:8.0.26
-    volumes:
-      - ${DYNAMIC_PATH_DB}/db:/docker-entrypoint-initdb.d
     ports:
       - "3306"
+    volumes:
+      - ${DYNAMIC_PATH_DB}/db:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: 1234!
     healthcheck:
