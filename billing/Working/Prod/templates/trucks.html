@@ -25,8 +25,8 @@
     function changeText2() {
       var userInput = document.getElementById('userInput').value;
       var lnk = document.getElementById('lnk');
-      lnk.href = "http://localhost:8081/trucks.html/" + userInput;
-      window.location = "http://localhost:8081/trucks.html/" + userInput;
+      lnk.href = "http://localhost:8081/trucks/" + userInput;
+      window.location = "http://localhost:8081/trucks/" + userInput;
     }
 
 
@@ -45,10 +45,10 @@
   </head>
   <body>
   <nav class="headNev">
-        <a class="headNevLink1" href="Index.html">  <i>Index</i></a>
-        <a class="headNevLink2" href="providers.html">Providers</a>
-        <a class="headNevLink2" href="rates.html">Rates</a>
-        <a class="headNevLink2" href="trucks.html">Trucks </a>
+        <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://localhost:8081/providers">Providers</a>
+        <a class="headNevLink2" href="http://localhost:8081/rates">Rates</a>
+        <a class="headNevLink2" href="http://localhost:8081/trucks">Trucks </a>
     </nav>
   <div class="contentBlock" style="top:200px ">
     <form id="inform" action="/api/" method="POST">

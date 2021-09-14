@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "Welcome to Billing Blue Site"
+    return render_template('index.html')
     #Add Navigiation bar to our APIs
 
 
@@ -29,25 +29,25 @@ def health():
         return Response({"Internal server error"}, status=500)
 
 
-@app.route('/providers.html')
+@app.route('/providers')
 def provider():
     return render_template('providers.html')
 
-@app.route('/rates.html')
+@app.route('/rates')
 def rates():
     mydir = os.listdir("/in")
     return render_template('rates.html', mydir=mydir)
 
-@app.route('/trucks.html')
+@app.route('/trucks')
 def truck():
     return render_template('trucks.html')
 
-@app.route('/trucks.html/<truck_number>')
+@app.route('/trucks/<truck_number>')
 def truck_id(truck_number):
     return render_template('truck_id.html')
 
 
-@app.route('/api/providers.html', methods=['GET', 'POST'])
+@app.route('/api/providers', methods=['GET', 'POST'])
 def providers():
     if request.method == 'POST':
         provider = request.form['provider']
@@ -76,7 +76,7 @@ def providers():
 
 
 
-@app.route('/api/rates.html', methods=['POST','GET'])
+@app.route('/api/rates', methods=['POST','GET'])
 def ratespost():
     if request.method == 'GET':
         mycursor = billingdb.cursor()
@@ -120,7 +120,9 @@ def ratespost():
 
 
 
-@app.route('/api/trucks.html', methods=['GET', 'POST', 'PUT'])
+
+@app.route('/api/trucks', methods=['GET', 'POST',])
+
 def trucks():
     if request.method == 'POST':
         prov_id = request.form['Provider-Id']
@@ -139,7 +141,7 @@ def trucks():
         return Response("Please enter truck license plate and provider id:", mimetype='text/plain')
 
 
-@app.route('/trucks.html/<truck_id>', methods=['PUT'])
+@app.route('/trucks/<truck_id>', methods=['PUT'])
 def trucks2(truck_id):
     prov_id = request.form['provider-id']
     mycursor = billingdb.cursor()
