@@ -187,7 +187,11 @@ def trucktime(truck_id):
 def trucktime(provider_id):
     truck_counter = 0
     session_count = 0
+    total=0
     product_dic = {}
+    products={}
+    mycursor.execute(f"""SELECT name FROM Providr WHERE id='{provider_id}""")
+    name = mycursor.fetchall()[0]
     time1 = request.args.get('from') #check times
     time2 = request.args.get('to')
     payload = {"from": time1, "to": time2}
@@ -206,7 +210,7 @@ def trucktime(provider_id):
                     r_session = requests.get(f"http://localhost:8081/session/{session}").json()
                     product = r_session['product']
                     neto = int(r_session['neto'])
-                    if product in product_dic.keys():
+                    if product in product_dic:
                         product_dic[product]['amount'] += neto
                         product_dic[product]['count'] += 1
                     else:
@@ -219,12 +223,27 @@ def trucktime(provider_id):
                             mycursor.execute(f"""SELECT Rate FROM Rates WHERE Scope='All', Product = '{product}'""")
                             rate = int(mycursor.fetchall()[0])
                             product_dic.update({product: {'amount': neto,'count':1,'rate':rate}})
+                for fruit in product_dic:
+                    pay = fruit['rate'] * fruit['amount']
+                    fruittoadd={ "product":fruit,
+                                  "count": fruit['count'],
+                                  "amount": fruit['amount'],
+                                  "rate": fruit['rate'],
+                                  "pay":pay}
+                    total += pay
+                    products.update(fruittoadd)
+                billjson={
+                              "id": provider_id,
+                              "name": name,
+                              "from": str(time1),
+                              "to": str(time2),
+                              "truckCount": truck_counter,
+                              "sessionCount": session_count,
+                              "products": products,
+                              "total": total
+                            }
             else:
                 continue
-
-                
-
-
     else:
         return Response(f"Provider {provider_id} not found - please enter provider to the providers list",
                         mimetype='text/plain', status=400)
