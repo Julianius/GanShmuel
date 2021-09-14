@@ -36,7 +36,7 @@ def provider():
 @app.route('/rates.html')
 def rates():
     mydir = os.listdir("/in")
-    return render_template('rates.html',mydir=mydir)
+    return render_template('rates.html', mydir=mydir)
 
 @app.route('/trucks.html')
 def truck():
@@ -112,7 +112,7 @@ def ratespost():
                     mycursor.execute(f"""INSERT INTO Rates (product_id, rate, scope) VALUES ("{i[0]}", {i[1]}, "{i[2]}")""")
             except:
                 print("something went wrong check it")
-        return "hello"
+        return "ok"
 
 
 
