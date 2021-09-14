@@ -1,11 +1,7 @@
 import socket
 import time
 
-<<<<<<< HEAD
-def monitor():
-=======
 def script():
->>>>>>> 628b9e15eed277c9cf1aa5c21c849d3e63168fb0
    open("open_ports.txt", 'w').close()
    f = open("open_ports.txt", "a")
 
@@ -80,7 +76,6 @@ def script():
 
    a_socket.close()
 
-
    a_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
    location = ("18.157.175.199", 8086)
@@ -92,15 +87,12 @@ def script():
 
    a_socket.close()
 
-<<<<<<< HEAD
    f.close()
 
 def loop():
    while True:
-      monitor()
+      script()
       time.sleep(5)
 
 loop()
-=======
-   f.close()
->>>>>>> 628b9e15eed277c9cf1aa5c21c849d3e63168fb0
+

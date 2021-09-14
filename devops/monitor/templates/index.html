@@ -4,8 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Commit Report</title>
+    <style>.port-container {
+        display: inline-block;
+        min-width: 10rem;
+        text-align: center;
+        height: 10rem;
+    }
+    
+    .green {
+        width: 60%;
+        margin: auto;
+        height: 5rem;
+        background-color: green;
+    }
+    
+    .red {
+        width: 60%;
+        margin: auto;
+        height: 2rem;
+        background-color: red;
+    }</style>
+    <title>Monitor</title>
 </head>
 <body>
     <h1>Monitor</h1>
@@ -48,6 +67,20 @@
         </div>
     </div>
 
-    <script src="../script.js" type="module"></script>
+    <script>fetch('../open_ports.txt')
+        .then(response => response.text())
+        .then(data => {
+              for(let i=0 ; i<=12 ; i+=2) {
+                  let port = 8080 + (i/2);
+                  if(data[i] == "1") {
+                      document.getElementById(port).querySelector("h3").innerHTML = "Port is on";
+                      document.getElementById(port).querySelector(".image").innerHTML = "<div class='green'></div>";
+                  } else {
+                      document.getElementById(port).querySelector("h3").innerHTML = "Port is off";
+                      document.getElementById(port).querySelector(".image").innerHTML = "<div class='red'></div>";
+                  }
+              }
+          }
+        );</script>
 </body>
 </html>
