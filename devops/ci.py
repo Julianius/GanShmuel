@@ -3,6 +3,8 @@ import os, os.path
 import re
 from test import check_contacts
 from monitor.script import script
+import subprocess
+
 
 app = Flask(__name__, template_folder='monitor/templates')
 
@@ -62,7 +64,7 @@ def build_app(data):
     print('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + 'temp')
     os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + 'temp')
 
-    #check_contacts(branch_name, pusher, merger_branch_name)
+    test_res = check_contacts(branch_name, pusher, merger_branch_name)
 
     os.system('rm -rf ' + PATH + branch_name)
     os.system('mkdir -p ' + PATH + branch_name)
@@ -97,6 +99,20 @@ def build_app(data):
       #print(APPS_DB_PATHS['billing'])
       #print(APPS_PATHS['billing'])
       run_docker_compose('8081', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False)
+
+
+
+
+# s = subprocess.check_output('docker ps', shell=True)
+# print(s)
+
+    # if test_res == SUCCESS_CODE and deploysuccess :
+    #   send success mail
+    # elif test_res == SUCCESS_CODE and deployfail :
+    #   send test success deploy fail email
+    # else:
+    #   send test fail email
+
 
 @app.route('/monitor', methods=['GET'])
 def home():
