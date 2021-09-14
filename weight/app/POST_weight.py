@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from re import template
 from flask import request
 from mysql_db import mysql_db
@@ -5,14 +6,23 @@ import time
 import json
 
 mySQL = mysql_db()
+=======
+from flask import request
+import time 
+>>>>>>> yoav
 
 def POST_weight():
         
     dir = request.args.get('direction')
+<<<<<<< HEAD
+=======
+    truck = request.args.get('truck', 'NA')
+>>>>>>> yoav
     containers = request.args.get('containers')
     weight = request.args.get('weight')
     unit = request.args.get('unit')
     force = request.args.get('force')
+<<<<<<< HEAD
     product = request.args.get('product', 'NA')
     truck_id = request.args.get('truckid')
     
@@ -65,3 +75,16 @@ def createNewSession(direction, f, date, weight, truckid, product):
     
 def netoWeight(bruto, neto):
     return bruto - neto;
+=======
+    produce = request.args.get('produce', 'NA')
+    
+    date = time.strftime('%Y%m%d%H%M%S')
+    
+    if dir == 'in' or dir == 'none':
+        createNewSession()
+        
+        
+def createNewSession(direction, f, date, weight):
+    pass
+    
+>>>>>>> yoav
