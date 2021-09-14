@@ -6,7 +6,7 @@
     function room() {
       var room = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
       if (room=='') room = 'general';
-      return "/api/chat/"+room;
+      return "/api/"+room;
     }
 
     function updateChat() {
@@ -39,12 +39,11 @@
     </nav>
     <div class="contentBlock" style="top:200px ">
     <h3> HELLO! You are Connected to server: {{ myhostname }}, IP Address: {{ myipaddr }}</h3>
-    <form id="inform" action="/api/chat" method="POST">
+    <form id="inform" action="/api/index.html" method="POST">
       User name:<input name="username" type=text>
       message:<input name="msg" type=text>
       <input id="sendBtn" type="button" value="send">
     </form>
-    <pre id="chatbox">Loading...</pre>
     </div>
   </body>
 </html>
