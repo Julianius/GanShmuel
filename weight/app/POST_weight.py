@@ -70,4 +70,4 @@ def createNewSession(direction, f, date, weight, truckid, product):
     
     
 def netoWeight(bruto, c_weight, t_weight):
-    return bruto - c_weight - t_weight;
+    return bruto - c_weight - t_weight
