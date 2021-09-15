@@ -1,0 +1,18 @@
+  <html>
+
+
+  <head>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+  </head>
+  <body>
+  <nav class="headNev">
+        <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://localhost:8081/providers">Providers</a>
+        <a class="headNevLink2" href="http://localhost:8081/rates">Rates</a>
+        <a class="headNevLink2" href="http://localhost:8081/trucks">Trucks </a>
+    </nav>
+    <div class="contentBlock" style="top:200px ">
+    <h3> HELLO! You are Connected to server: {{ myhostname }}, IP Address: {{ myipaddr }}</h3>
+    </div>
+  </body>
+</html>

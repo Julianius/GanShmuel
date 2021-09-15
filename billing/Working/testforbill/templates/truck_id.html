@@ -1,0 +1,54 @@
+ <html>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+    function truck_id() {
+      var truck_id = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
+      return "/trucks/"+truck_id;
+    }
+
+    function updateChat() {
+      $.get(room(),function(data) {
+        $("#chatbox").text(data);
+        window.setTimeout(updateChat,15000);
+      })
+    }
+
+
+
+    $(document).ready(function() {
+        $('#sendBtn').click(function () {
+            console.log("click");
+            var provider_id = $('#provider_id').val();
+            const  str = 'http://localhost:8081' + truck_id()
+            $.ajax({
+                url: str ,     //Your api url
+                type: 'PUT',   //type is any HTTP method
+                data:
+                   {provider_id:provider_id
+                },
+                success: function () {
+                }
+            })
+            window.setTimeout(updateChat, 1500);
+        });
+    });
+
+
+    </script>
+  <head>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+  </head>
+  <body>
+  <div class="contentBlock" style="top:200px ">
+	<h1>this is a generick truck room</h1>
+    <form  action="/api/"  >
+      provider id:<input id="provider_id"  type="text" name="provider_id"  >
+      <input id="sendBtn" type="button" value="submit">
+    </form>
+      
+    </div>
+    <pre id="chatbox"> Please enter truck license plate and provider id </pre>
+  </body>
+</html>
