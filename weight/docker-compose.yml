@@ -9,7 +9,7 @@ services:
     ports: 
       #- "${DYNAMIC_PORT}:5000"
       - ${DYNAMIC_PORT}:5000
-      
+      # dddd
   mysql:
     image: mysql:8
     #container_name: mysql_db_weight
