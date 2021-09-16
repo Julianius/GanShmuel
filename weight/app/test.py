@@ -1,5 +1,5 @@
 import unittest
-from app import app
+#from app import app
 class BasicTestCase(unittest.TestCase):
         def test_home(self):
                 tester = app.test_client(self)
