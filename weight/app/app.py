@@ -1,10 +1,12 @@
-from flask import Flask, Response, request,render_template
+from flask import Flask, Response, request, render_template
 import requests
 from GET_health import GET_health
 from GET_unknown import GET_unknown
 from GET_weight import GET_weight
 from GET_item import GET_item
 from POST_batch_weight import POST_batch_weight
+from POST_weight import POST_weight
+
 from GET_session import GET_session
 from test import BasicTestCase
 
@@ -30,6 +32,10 @@ def batch_weight(file):
 @app.route("/item/<id>", methods=['GET']) 
 def item_weight(id): 
     return GET_item(id)
+
+@app.route("/weight", methods=['GET']) 
+def weight_get_weight(): 
+    return GET_weight(request)
 
 @app.route("/weight", methods=['POST']) 
 def weight_post_weight(): 

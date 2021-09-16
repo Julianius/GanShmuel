@@ -31,13 +31,14 @@ def GET_item(id):
 					GROUP BY t1.id;"""
 
 		info = mysql.getData(query.format(fromTime, toTime, id))
-				
-		value = {
-			"id": id,
-			"tara": info[0]['weight'],
-			"sessions": info[0]['sessions'],
-		}
-		return json.dumps(value)
+		if len(info) != 0:	
+			value = {
+				"id": id,
+				"tara": info[0]['weight'],
+				"sessions": info[0]['sessions'],
+			}
+			return json.dumps(value)
+		return "No data found"
 	
 	except:
 		return "Weight data is unavailable at the moment."
