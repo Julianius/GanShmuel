@@ -23,16 +23,16 @@ def index():
 
 @app.route('/health')
 def health():
+    return render_template('health.html')
+        
+
+@app.route('/api/health')
+def healtho():
     try:
-        billingdb = mysql.connector.connect(
-            host="billingdb",
-            user="root",
-            password="1234!",
-            database='billdb',
-        )
-        return Response({"Ok"}, status=200)
+        mycursor.execute("use billdb")
+        return Response({"OkOk"}, status=200)
     except:
-        return Response({"Internal server error"}, status=500)
+        return Response({"not ok"},status=500)
 
 
 @app.route('/providers')

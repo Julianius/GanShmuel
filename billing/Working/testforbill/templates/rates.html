@@ -23,7 +23,7 @@
     $(document).ready(function() {
       $("#chatbox").text("Loading Rates...");
       $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat,15000);
+      window.setTimeout(updateChat,1000);
     });
 
   </script>
@@ -32,7 +32,7 @@
   </head>
   <body>
   <div class="contentBlock" style="top:200px ">
-    <form id="inform" action="/api/rates.html" method="POST">
+    <form id="inform" action="/api/rates" method="POST">
       <pre> Choose File to Upload from this list: {{ mydir }} </pre>
       <input name="msgfile" type=text>
       <input id="sendBtn" type="button" value="send">
