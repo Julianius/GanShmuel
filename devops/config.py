@@ -6,6 +6,10 @@ SUCCESS_CODE = 0
 FAILURE_CODE = 1
 PATH_APP = '/GanShmuel/app/'
 PATH_TEST = '/GanShmuel/test/'
+WEIGHT='weight'
+BILLING='billing'
+STAGE='stage'
+MAIN='main'
 BRANCHES_ALLOWED = [ 'main', 'weight-staging', 'billing-staging' ]
 BRANCHES_FORBIDDEN = [ 'devops', 'weight', 'billing' ]
 
