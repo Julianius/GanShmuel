@@ -5,16 +5,16 @@ services:
     depends_on:
       - mysql
     #environment:
-    #  - DYNAMIC_PORT=8083
     ports: 
       #- "${DYNAMIC_PORT}:5000"
-      - ${DYNAMIC_PORT}:5000
+      # - ${DYNAMIC_PORT}:5000
+       - 8083:5000
       # dddd
   mysql:
     image: mysql:8
     #container_name: mysql_db_weight
     volumes: 
-      - ${DYNAMIC_PATH_DB}/mysql-db:/docker-entrypoint-initdb.d
+      - ./mysql-db:/docker-entrypoint-initdb.d
     environment: 
       - MYSQL_ROOT_PASSWORD=123456
     healthcheck:
