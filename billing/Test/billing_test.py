@@ -10,7 +10,7 @@ def check(thecheck,therespone):
 def checkhealth():
     urlname=['health','providers.html','rates.html','trucks.html']
     for url in urlname:
-        URL = "http://localhost:8085/{}".format(url)
+        URL = "http://18.157.175.199:8085/{}".format(url)
         res = requests.get(url=URL)
         test = check(res.status_code, "200")
         if test==1:
@@ -18,7 +18,7 @@ def checkhealth():
     return test
 
 def checkprovider():
-        URL = "http://localhost:8085/api/provider"
+        URL = "http://18.157.175.199:8085/api/provider"
         with open(f'testfile/testfile.txt', "r") as testfile:
             readtest=testfile.readlines()
         for line in range(len(readtest)):
