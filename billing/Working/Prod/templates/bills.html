@@ -1,6 +1,16 @@
   <html>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
+    <script type="text/javascript">
 
+        function changeText2() {
+      var prov_id = document.getElementById('prov_id').value;
+      var lnk = document.getElementById('lnk');
+      lnk.href = "http://localhost:8081/bills/" + prov_id ;
+      window.location = "http://localhost:8081/bills/" + prov_id;
+    }
+
+    </script>
   <head>
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
   </head>
@@ -14,7 +24,12 @@
         <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
     </nav>
     <div class="contentBlock" style="top:200px ">
-    <h3> HELLO! You are Connected to server: {{ myhostname }}, IP Address: {{ myipaddr }}</h3>
+        <p> To issue a bill please enter provider name </p>
+           <a hidden>Link <a href="" id=lnk></a>
+    <br>
+  <input type='text' id='prov_id'/>
+  <input type='button' onclick='changeText2()' value='Enter' />
+    </a>
     </div>
   </body>
 </html>

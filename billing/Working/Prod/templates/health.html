@@ -1,4 +1,4 @@
-  <html>
+<html>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -9,28 +9,19 @@
     }
 
     function updateChat() {
-      $.get(room(),function(data) {
-        $("#chatbox").text(data);
-        window.setTimeout(updateChat,15000);
-      })
+      $.get(room())
     }
-
-    function sendmessage() {
-      $.post( room(), $( "#inform" ).serialize() );
-    }
-
     $(document).ready(function() {
-      $("#chatbox").text("Loading Providers...");
-      $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat,15000);
+      $.get(room());
     });
 
   </script>
-  <head>
-    <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
-  </head>
-  <body>
-  <nav class="headNev">
+
+<head>
+  <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+</head>
+<body>
+   <nav class="headNev">
         <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
         <a class="headNevLink2" href="http://localhost:8081/health">Health </a>
         <a class="headNevLink1" href="http://localhost:8081/providers">Providers</a>
@@ -39,11 +30,7 @@
         <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
     </nav>
   <div class="contentBlock" style="top:200px ">
-    <form id="inform" action="/api/provider.html" method="POST">
-      provider name:<input name="provider" type=text>
-      <input id="sendBtn" type="button" value="submit">
-    </form>
-    <pre id="box">enter new provider</pre>
-      </div>
-  </body>
+      <h3>Testing database connection</h3>
+  </div>
+</body>
 </html>

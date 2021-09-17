@@ -5,14 +5,15 @@
     <script type="text/javascript">
     function truck_id() {
       var truck_id = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
-      return "/trucks/"+truck_id;
+      return "/trucks/"+ truck_id;
     }
 
-    function updateChat() {
-      $.get(room(),function(data) {
-        $("#chatbox").text(data);
-        window.setTimeout(updateChat,15000);
-      })
+      function changeText2() {
+      var t1 = document.getElementById('t1').value;
+      var t2 = document.getElementById('t2').value;
+      var lnk = document.getElementById('lnk');
+      lnk.href = "http://localhost:8081" + truck_id() +"/?from=" +t1 +"&to=" +t2 ;
+      window.location = "http://localhost:8081" +truck_id() +"/?from=" +t1 +"&to=" +t2;
     }
 
 
@@ -31,7 +32,6 @@
                 success: function () {
                 }
             })
-            window.setTimeout(updateChat, 1500);
         });
     });
 
@@ -41,13 +41,29 @@
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
   </head>
   <body>
+   <nav class="headNev">
+        <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://localhost:8081/health">Health </a>
+        <a class="headNevLink1" href="http://localhost:8081/providers">Providers</a>
+        <a class="headNevLink2" href="http://localhost:8081/rates">Rates</a>
+        <a class="headNevLink1" href="http://localhost:8081/trucks">Trucks </a>
+        <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
+    </nav>
   <div class="contentBlock" style="top:200px ">
 	<h1>this is a generick truck room</h1>
     <form  action="/api/"  >
       provider id:<input id="provider_id"  type="text" name="provider_id"  >
       <input id="sendBtn" type="button" value="submit">
     </form>
-      
+
+
+      <a hidden>Link <a href="" id=lnk> </a>
+  <br>
+   <p>To inspect a specific truck enter truck number:</p>
+  <input type='text' id='t1'/>
+  <input type='text' id='t2'/>
+  <input type='button' onclick='changeText2()' value='Enter' />
+    </a>
     </div>
     <pre id="chatbox"> Please enter truck license plate and provider id </pre>
   </body>

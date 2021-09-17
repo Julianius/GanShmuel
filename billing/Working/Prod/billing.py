@@ -21,14 +21,26 @@ def index():
     # Add Navigiation bar to our APIs
 
 
+@app.route('/bills')
+def bills():
+    return render_template('bills.html')
+    # Add Navigiation bar to our APIs
+
+@app.route('/bills/<provider_id>')
+def bills_spes(provider_id):
+    return render_template('bills_spec.html')
+    # Add Navigiation bar to our APIs
+
 @app.route('/health')
 def health():
+    return render_template('health.html')
+@app.route('/api/health')
+def healtho():
     try:
-        mycursor.execute("USE billdb")
-        return Response({"Ok"}, status=200)
+        mycursor.execute("use billdb")
+        return Response({"Connection to the database is healthy"}, status=200)
     except:
-        return Response({"Internal server error"}, status=500)
-
+        return Response({"Connection to the darabase is not healthy"},status=500)
 
 @app.route('/providers')
 def provider():
@@ -145,7 +157,7 @@ def trucks():
 
 @app.route('/trucks/<truck_id>', methods=['PUT'])
 def trucks2(truck_id):
-    prov_id = request.form['provider-id']
+    prov_id = request.form['provider_id']
     mycursor = billingdb.cursor()
     mycursor.execute("USE billdb")
     mycursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
@@ -159,8 +171,8 @@ def trucks2(truck_id):
                         mimetype='text/plain')
 
 
-@app.route('/truck/<truck_id>')
-def trucktime(truck_id):
+@app.route('/trucks/<truck_id>/')
+def trucktimes(truck_id):
     time1 = request.args.get('from')
     time2 = request.args.get('to')
     # timetest1 = len(time1)
@@ -182,17 +194,19 @@ def trucktime(truck_id):
         return Response({"404"}, status=404)
     return res.json()
 
-#json
-@app.route('/bill/<provider_id>')
-def trucktime(provider_id):
+
+# json
+@app.route('/bills/<provider_id>/')
+def bill(provider_id):
     truck_counter = 0
     session_count = 0
-    total=0
+    total = 0
     product_dic = {}
-    products={}
-    mycursor.execute(f"""SELECT name FROM Providr WHERE id='{provider_id}""")
+    products = {}
+    mycursor = billingdb.cursor()
+    mycursor.execute(f"""SELECT name FROM Providr WHERE id='{provider_id}'""")
     name = mycursor.fetchall()[0]
-    time1 = request.args.get('from') #check times
+    time1 = request.args.get('from')  # check times
     time2 = request.args.get('to')
     payload = {"from": time1, "to": time2}
     mycursor = billingdb.cursor()
@@ -218,30 +232,30 @@ def trucktime(provider_id):
                             f"""SELECT Rate FROM Rates WHERE Scope='{provider_id}'AND Product='{product}' """)
                         rate = int(mycursor.fetchall()[0])
                         if result:
-                            product_dic.update({product: {'amount': neto, 'count': 1 , 'rate': rate}})
+                            product_dic.update({product: {'amount': neto, 'count': 1, 'rate': rate}})
                         else:
                             mycursor.execute(f"""SELECT Rate FROM Rates WHERE Scope='All', Product = '{product}'""")
                             rate = int(mycursor.fetchall()[0])
-                            product_dic.update({product: {'amount': neto,'count':1,'rate':rate}})
+                            product_dic.update({product: {'amount': neto, 'count': 1, 'rate': rate}})
                 for fruit in product_dic:
                     pay = fruit['rate'] * fruit['amount']
-                    fruittoadd={ "product":fruit,
+                    fruittoadd = {"product": fruit,
                                   "count": fruit['count'],
                                   "amount": fruit['amount'],
                                   "rate": fruit['rate'],
-                                  "pay":pay}
+                                  "pay": pay}
                     total += pay
                     products.update(fruittoadd)
-                billjson={
-                              "id": provider_id,
-                              "name": name,
-                              "from": str(time1),
-                              "to": str(time2),
-                              "truckCount": truck_counter,
-                              "sessionCount": session_count,
-                              "products": products,
-                              "total": total
-                            }
+                billjson = {
+                    "id": provider_id,
+                    "name": name,
+                    "from": str(time1),
+                    "to": str(time2),
+                    "truckCount": truck_counter,
+                    "sessionCount": session_count,
+                    "products": products,
+                    "total": total
+                }
             else:
                 continue
     else:
