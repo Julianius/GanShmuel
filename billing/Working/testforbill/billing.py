@@ -24,7 +24,12 @@ def index():
 @app.route('/health')
 def health():
     try:
-        mycursor.execute("USE billdb")
+        billingdb = mysql.connector.connect(
+            host="billingdb",
+            user="root",
+            password="1234!",
+            database='billdb',
+        )
         return Response({"Ok"}, status=200)
     except:
         return Response({"Internal server error"}, status=500)
@@ -53,6 +58,7 @@ def truck_id(truck_number):
 
 @app.route('/api/providers', methods=['GET', 'POST'])
 def providers():
+    # billingdb=connecttosql()
     if request.method == 'POST':
         provider = request.form['provider']
         mycursor = billingdb.cursor()
@@ -133,8 +139,12 @@ def trucks():
         cursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
         results = cursor.fetchall()
         if results:
-            cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
-            return Response("Ok", mimetype='text/plain')
+            try:
+                cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
+                return Response("Ok", mimetype='text/plain')
+            except mysql.connector.errors.IntegrityError:
+                return Response("truck id all ready exist", status=500)
+
         else:
             return Response(f"Provider {prov_id} not found - please enter provider to the providers list",
                             mimetype='text/plain')
@@ -145,7 +155,7 @@ def trucks():
 
 @app.route('/trucks/<truck_id>', methods=['PUT'])
 def trucks2(truck_id):
-    prov_id = request.form['provider-id']
+    prov_id = request.form['provider_id']
     mycursor = billingdb.cursor()
     mycursor.execute("USE billdb")
     mycursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
@@ -189,10 +199,11 @@ def totalbill(provider_id):
     session_count = 0
     total=0
     product_dic = {}
-    products={}
+    products=[]
     mycursor.execute("USE billdb")
-    mycursor.execute(f"""SELECT name FROM Provider WHERE id={provider_id}""")  
-    name = mycursor.fetchall()[0]
+    mycursor.execute(f"""SELECT name FROM Provider WHERE id={provider_id}""")
+    for names in mycursor.fetchall():
+        name = names
     time1 = request.args.get('from') #check times
     time2 = request.args.get('to')
     payload = {"from": time1, "to": time2}
@@ -203,9 +214,9 @@ def totalbill(provider_id):
             res = requests.get(f"http://172.28.0.5:5000/item/{truck}", params=payload)
             if res.text != "No data found":
                 truck_counter += 1
-                # sessions = res.json()['sessions']
-                # session_count += len(sessions)
-                sessions=[3]
+                sessions = res.json()['sessions']
+                session_count += len(sessions)
+                sessions = [3] # not part of the prodaction code give as good session with neto weigh
                 for session in sessions:
                     r_session = requests.get(f"http://172.28.0.5:5000/session/{session}").json()
                     product = r_session['product_name']
@@ -214,23 +225,27 @@ def totalbill(provider_id):
                         product_dic[product]['amount'] += neto
                         product_dic[product]['count'] += 1
                     else:
-                        mycursor.execute(f"""SELECT rate FROM Rates WHERE Scope={provider_id} AND product_id='{product}' """)
-                        rate = int(mycursor.fetchall()[0])
-                        if result:
-                            product_dic.update({product: {'amount': neto, 'count': 1 , 'rate': rate}})
+                        mycursor.execute(f"""SELECT rate FROM Rates WHERE scope={provider_id} AND product_id='{product}' """)
+                        rate = mycursor.fetchall()
+                        if rate:
+                            for rate_list in rate:
+                                product_dic.update({product: {'amount': neto, 'count': 1 , 'rate': rate_list[0]}})
+
                         else:
-                            mycursor.execute(f"""SELECT Rate FROM Rates WHERE Scope='All', Product = '{product}'""")
-                            rate = int(mycursor.fetchall()[0])
-                            product_dic.update({product: {'amount': neto,'count':1,'rate':rate}})
+
+                            mycursor.execute(f"""SELECT rate FROM Rates WHERE scope='All' AND product_id = '{product}' """)
+                            rate = mycursor.fetchall()
+                            for rate_list in rate:
+                                product_dic.update({product: {'amount': neto, 'count': 1, 'rate': rate_list[0]}})
                 for fruit in product_dic:
-                    pay = fruit['rate'] * fruit['amount']
+                    pay = int(product_dic[fruit]['rate']) * int(product_dic[fruit]['amount'])
                     fruittoadd={ "product":fruit,
-                                  "count": fruit['count'],
-                                  "amount": fruit['amount'],
-                                  "rate": fruit['rate'],
+                                  "count": product_dic[fruit]['count'],
+                                  "amount":product_dic[fruit]['amount'],
+                                  "rate":product_dic[fruit]['rate'],
                                   "pay":pay}
                     total += pay
-                    products.update(fruittoadd)
+                    products.append(fruittoadd)
                 billjson={
                               "id": provider_id,
                               "name": name,
@@ -249,35 +264,31 @@ def totalbill(provider_id):
                         mimetype='text/plain', status=400)
 
 
-@app.route("/testserver/123")  # TEST, THIS IS NOT PART OF OUR PROJECT ONLY TEST!!!!!!
-def tiesto():
-    time1 = request.args.get('from')
-    time2 = request.args.get('to')
-    if time1 == "10" and time2 == "10":
-        return {"id": 123, "tara": 80, "sessions": [1, 4, 6, 8]}
-    else:
-        return "no good"
-
+@app.route("/clear/")  # TEST, THIS IS  PART OF OUR PROJECT clear all the test parameters from database!!!!!!
+def clear_databases_test():
+    provider_id = request.args.get('provider_id')
+    truck_id = request.args.get('truck_id')
+    truck_id2 = request.args.get('truck_id2')
+    mycursor = billingdb.cursor()
+    mycursor.execute("USE billdb")
+    mycursor.execute(f"DELETE FROM Trucks WHERE id= {int(provider_id)}")
+    mycursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
+    mycursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id2)}'")
+    return "ok"
 
 if __name__ == '__main__':
-    try:
-        billingdb = mysql.connector.connect(
-            host="billingdb",
-            user="root",
-            password="1234!",
-        )
-        mycursor = billingdb.cursor()
-        mycursor.execute("use billdb")
-        billingdb.commit()
-
-    except:
-        print("failed to connect to DB")
-
-    # HOST="billingdb"
-    # COMMAND="mysqldump -u root -p 1234! -p billdb > /db/newdb.sql"
-    # ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],
-    # shell=False,
-    # stdout=subprocess.PIPE,
-    # stderr=subprocess.PIPE)
+    connectdb = True
+    while connectdb:
+        try:
+            billingdb = mysql.connector.connect(
+                host="billingdb",
+                user="root",
+                password="1234!",
+                database='billdb',
+            )
+            mycursor = billingdb.cursor()
+            connectdb = False
+        except:
+            connectdb = True
 
     app.run(debug=True, port=8081, host='0.0.0.0')

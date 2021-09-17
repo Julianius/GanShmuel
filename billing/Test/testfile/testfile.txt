@@ -1,15 +1,25 @@
-{"POST":{"provider":"yael1"},"value":{"id":"valuetochange","name":"avi"},"return":{"id":"valuetochange","name":"yael1"}}
-{"POST":{"provider":"yael1"},"value":{"id":"valuetochange","name":"avi"},"return":"name exist"}
-{"POST":{"provider":"avi221"},"value":{"id":"valuetochange","name":"avi22"},"return":{"id":"valuetochange","name":"avi221"}}
-
-{"POST":{"msgfile":"to_test_file/rates.xlsx"},"value":"ok","return":"Ok"}
-{"POST":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}
-{"POST":{"msgfile":"to_test_file/ratesaftepost.xlsx"},"value":"ok","return":"Ok"}
+{"POST":{"provider":"test_provider"},"return":{"id":"valuetochange","name":"test_provider"}}
+{"POST":{"provider":"test_provider"},"return":"name exist"}
 
 
-{"POST":{"msgfile":"rates.xlsx"},"value":"ok","return":"Ok"}
-{"POST":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}
-{"PUT":{"msgfile":"rates.xlsx"},"value":"ok","return":"Ok"}
-{"PUT":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}
-{"GET":{"msgfile":"rates.xlsx"},"value":"ok","return":"Ok"}
-{"GET":{"msgfile":"norates.xlsx"},"value":"ok","return":"no such a file"}
+{"POST":{"msgfile":"to_test_file/rates.xlsx"},"return":"Ok"}
+{"POST":{"msgfile":"norates.xlsx"},"return":"no such a file"}
+{"POST":{"msgfile":"to_test_file/ratesaftepost.xlsx"},"return":"Ok"}
+
+{"POST":{"Provider-Id":"valuetochange","Truck-Id":"8888"},"return":"Ok"}
+{"POST":{"Provider-Id":"valuetochange","Truck-Id":"8888"},"return":"truck id all ready exist"}
+{"POST":{"Provider-Id":"99999","Truck-Id":"8"},"return":"Provider 99999 not found - please enter provider to the providers list"}
+{"GET":{"none"},"return":"Please enter truck license plate and provider id:"}
+
+{"PUT":{"provider_id":valuetochange},"value":8888 ,"return":"changed truck number 8888 to provider valuetochange"}
+{"PUT":{"provider_id":"99999"},"value":8888,"return":"Provider 99999 not found -please enter provider to the providers list"}
+{"PUT":{"provider_id":valuetochange},"value":9999 ,"return":"changed truck number 9999 to provider valuetochange"}
+
+
+{"GET":{"from": 11111111111111, "to":22222222222222},"value":"3","return":"Ok"}
+{"GET":{"from": 11111111111111, "to":22222222222222},"value":"65646465","return":"404"}
+
+
+
+
+{"GET":{"provider_id":valuetochange, "truck_id":8888, "truck_id2":9999}}
