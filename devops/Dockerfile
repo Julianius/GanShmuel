@@ -1,4 +1,4 @@
-FROM python:3.8.12
+FROM python:3.8
 RUN apt-get update
 RUN apt-get install -y docker.io
 RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose

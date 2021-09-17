@@ -1,11 +1,27 @@
 import os
 from mailing import *
+from utils import *
 
+DYNAMIC_PATH = str(os.environ.get('DYNAMIC_PATH'))
 BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
 SUCCESS_CODE = 0
 FAILURE_CODE = 1
+TESTING_PORT = '8085'
 PATH_TEST = '/GanShmuel/test/'
 PATH_APP = '/GanShmuel/app/'
+DOCKER_COMPOSE_PATHS = { 
+  'weight': '/weight/docker-compose.yml',
+  'billing': '/billing/Prod/docker-compose.yml'
+}
+APPS_DB_PATHS = {
+  'weight': DYNAMIC_PATH + 'test/weight-staging/weight',
+  'billing': DYNAMIC_PATH + 'test/billing-staging/billing/Prod'
+}
+APPS_PATHS = {
+  'weight': DYNAMIC_PATH + 'test/weight-staging/weight',
+  'billing': DYNAMIC_PATH + 'test/billing-staging/billing/Prod'
+}
+
 
 def check_contacts(branch_name, pusher, merger_name):    
     if branch_name =="weight-staging":
@@ -25,53 +41,54 @@ def check_contacts(branch_name, pusher, merger_name):
                 break
         pass
 
-def run_tests(team_leader, pusher, branch_name, merger_name):
-
-    os.environ["DYNAMIC_PORT"] = "8085"
-    is_weight  = False
+def run_tests(branch_name, merger_name):
     os.system('rm -rf ' + PATH_TEST + branch_name)
     os.system('mkdir -p ' + PATH_TEST + branch_name)
     os.system('cp -a '+ PATH_APP + 'temp/* ' + PATH_APP + 'temp/.* ' + PATH_TEST + branch_name + '/ 2>/dev/null')
 
     if branch_name == BRANCHES_ALLOWED[0]:
-      if merger_name == BRANCHES_ALLOWED[1]:
-        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/weight/docker-compose.yml -p main-weight up -d --build --force-recreate')        
-        test_result = weight_test(team_leader, pusher)     
-      elif merger_name == BRANCHES_ALLOWED[2]:
-        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/billing/Prod/docker-compose.yml -p main-billing up -d --build --force-recreate')
-        test_result = billing_test(team_leader, pusher)
+        if merger_name == BRANCHES_ALLOWED[1]:
+            run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'test-weight-main', False, True)
+            test_result = weight_test()
+            run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'test-weight-main', True, False)
+        elif merger_name == BRANCHES_ALLOWED[2]:
+            run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'test-billing-main', False, True)
+            test_result = billing_test()
+            run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'test-billing-main', True, False)
     elif branch_name == BRANCHES_ALLOWED[1]:
-        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/weight/docker-compose.yml -p weight-staging up -d --build --force-recreate')
-        test_result = weight_test(team_leader, pusher)
-        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/weight/docker-compose.yml down -v')         
+        run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'test-weight-staging', False, True)
+        test_result = weight_test()
+        run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'test-weight-staging', True, False)
     else:
-        os.system('docker-compose -f ' + PATH_TEST + branch_name + '/billing/Prod/docker-compose.yml -p billing-staging up -d --build --force-recreate')
-        test_result = billing_test(team_leader, pusher)
-
-    if test_result == SUCCESS_CODE:
-        send_email("Blue team tests success", "All the tests succeeded, good job!", team_leader, pusher)
-    else:
-        send_email("Blue team tests failure", "Some tests failed, go check your code.", team_leader, pusher)
-    
+        run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'test-billing-staging', False, True)
+        test_result = billing_test()
+        test_result = billing_test()
+        test_result = billing_test()
+        test_result = billing_test()
+        run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'test-billing-staging', True, False)
     return test_result
 
-def billing_test(team_leader, pusher):
-    ## Still no path for billing 13.09.2021
-    #res = os.exec('/bin/python3 ' + PATH_TESTS + BRANCHES_ALLOWED[2] + '')
-    res = 0
+def billing_test():
+    #os.environ["FLASK_APP"] = PATH_TEST + BRANCHES_ALLOWED[2] + '/Test/test.py'
+    #res = os.system('flask run')#   bin/python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/Test/test.py')
+    os.system('sleep 10')
+    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/billing_test.py')
+    #res = 0
     if res == SUCCESS_CODE:
-        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        #send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
         return SUCCESS_CODE
     else:
-        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        #send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
         return FAILURE_CODE
 
-def weight_test(team_leader, pusher):
+def weight_test():
     #res = os.exec('/bin/python3 ' + PATH_TESTS + BRANCHES_ALLOWED[3] + '/app/test.py')
-    res = 0
+    os.system("chmod +x test.py")
+    res = os.system('python ' + PATH_TEST + BRANCHES_ALLOWED[1] + '/weight/app/test.py')
+    #res = 0
     if res == SUCCESS_CODE:
-        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        #send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
         return SUCCESS_CODE
     else:
-        send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
+        #send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)
         return FAILURE_CODE
