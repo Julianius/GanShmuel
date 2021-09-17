@@ -1,27 +1,9 @@
 import os
 from mailing import *
 from utils import *
+from config import *
 
-DYNAMIC_PATH = str(os.environ.get('DYNAMIC_PATH'))
-BRANCHES_ALLOWED = ['main', 'weight-staging', 'billing-staging']
-SUCCESS_CODE = 0
-FAILURE_CODE = 1
 TESTING_PORT = '8085'
-PATH_TEST = '/GanShmuel/test/'
-PATH_APP = '/GanShmuel/app/'
-DOCKER_COMPOSE_PATHS = { 
-  'weight': '/weight/docker-compose.yml',
-  'billing': '/billing/Prod/docker-compose.yml'
-}
-APPS_DB_PATHS = {
-  'weight': DYNAMIC_PATH + 'test/weight-staging/weight',
-  'billing': DYNAMIC_PATH + 'test/billing-staging/billing/Prod'
-}
-APPS_PATHS = {
-  'weight': DYNAMIC_PATH + 'test/weight-staging/weight',
-  'billing': DYNAMIC_PATH + 'test/billing-staging/billing/Prod'
-}
-
 
 def check_contacts(branch_name, pusher, merger_name):    
     if branch_name =="weight-staging":

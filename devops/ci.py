@@ -4,27 +4,16 @@ import os, os.path
 import re
 from monitor.script import script
 from mailing import *
-from utils import *
+from utils import docker_compose_up
+from config import *
 
 app = Flask(__name__, template_folder='monitor/templates')
 
-DYNAMIC_PATH = str(os.environ.get('DYNAMIC_PATH'))
-REPO = 'https://github.com/Julianius/GanShmuel.git'
-BRANCHES_ALLOWED = [ 'main', 'weight-staging', 'billing-staging' ]
-BRANCHES_FORBIDDEN = [ 'devops', 'weight', 'billing' ]
-PATH = '/GanShmuel/app/'
-DOCKER_COMPOSE_PATHS = { 
-  'weight': '/weight/docker-compose.yml',
-  'billing': '/billing/Prod/docker-compose.yml'
-}
-APPS_DB_PATHS = {
-  'weight': DYNAMIC_PATH + 'app/weight-staging/weight',
-  'billing': DYNAMIC_PATH + 'app/billing-staging/billing/Prod'
-}
-APPS_PATHS = {
-  'weight': DYNAMIC_PATH + 'app/weight-staging/weight',
-  'billing': DYNAMIC_PATH + 'app/billing-staging/billing/Prod'
-}
+def add_to_committer_report(timestamp, branch_name, merger_branch_name, pusher):
+  f = open(PATH_APP + 'commits.txt', 'a')
+  text = '[ ' + timestamp + ' ] ' + pusher + ' merged to ' + branch_name + ' from ' + merger_branch_name + '\\n'
+  f.write(text)
+  f.close()
 
 def build_app(data):
   timestamp = data.get('head_commit').get('timestamp')
@@ -37,8 +26,6 @@ def build_app(data):
   else:
     merger_branch_name = ''
   pusher = data.get('pusher').get('name')
-  #if branch_name ==
-  #pusher_email = CONTACT_EMAILS["weight_team"][pusher]
 
   for team in CONTACT_EMAILS.items():
     if pusher in team[1]:
@@ -58,9 +45,9 @@ def build_app(data):
 
   if branch_name in BRANCHES_ALLOWED and merger_branch_name != BRANCHES_FORBIDDEN[0]:
 
-    os.system('rm -rf ' + PATH + 'temp')
-    print('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + 'temp')
-    os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH + 'temp')
+    os.system('rm -rf ' + PATH_APP + 'temp')
+    print('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH_APP + 'temp')
+    os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH_APP + 'temp')
     test_result = 0
     test_result = run_tests(branch_name, merger_branch_name)
 
@@ -71,24 +58,24 @@ def build_app(data):
       elif cur == 'billing-staging':
         #send_email('Billing team tests failure', 'Some tests have failed please check', team_lead_email, pusher_email)
         pass
-      return 1
+      #return 1
 
-    os.system('rm -rf ' + PATH + branch_name)
-    os.system('mkdir -p ' + PATH + branch_name)
-    os.system('mv '+ PATH + 'temp/* ' + PATH + 'temp/.* ' + PATH + branch_name + '/ 2>/dev/null')
-    os.system('rm -rf ' + PATH + 'temp')
+    os.system('rm -rf ' + PATH_APP + branch_name)
+    os.system('mkdir -p ' + PATH_APP + branch_name)
+    os.system('mv '+ PATH_APP + 'temp/* ' + PATH_APP + 'temp/.* ' + PATH_APP + branch_name + '/ 2>/dev/null')
+    os.system('rm -rf ' + PATH_APP + 'temp')
 
-    add_to_committer_report(PATH, timestamp, branch_name, merger_branch_name, pusher)
+    add_to_committer_report(PATH_APP, timestamp, branch_name, merger_branch_name, pusher)
 
     if branch_name == BRANCHES_ALLOWED[0]:
       if merger_branch_name == BRANCHES_ALLOWED[1]:
-        run_docker_compose('8084', PATH + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-main', False, False)
+        docker_compose_up('8084', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-main', False, False)
       elif merger_branch_name == BRANCHES_ALLOWED[2]:
-        run_docker_compose('8082', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-main', False, False)
+        docker_compose_up('8082', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-main', False, False)
     elif branch_name == BRANCHES_ALLOWED[1]:
-      run_docker_compose('8083', PATH + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-staging', False, False)
+      docker_compose_up('8083', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-staging', False, False)
     else:
-      run_docker_compose('8081', PATH + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False, False)
+      docker_compose_up('8081', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False, False)
 
 @app.route('/monitor', methods=['GET'])
 def home():
