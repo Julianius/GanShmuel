@@ -58,7 +58,7 @@ def gweight():
 @app.route("/weight", methods=['GET','POST']) 
 def weight():
     if request.method =='POST':
-       return POST_weight() 
+       return POST_weight(request) 
     if request.method == 'GET':
        return GET_weight(request)
 

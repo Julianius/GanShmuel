@@ -4,9 +4,9 @@
   <script>
     function api() {
       var api = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
-      var id = document.getElementById('id').value;
+      var file = document.getElementById('file').value;
 
-      return "/"+api+"/"+id;
+      return "/"+api+"/"+file;
     }
     function updateChat() {
       $.get(api(),function(data) {
@@ -98,7 +98,7 @@
                       <input id="sendBtn" type="button" value="send">
                     </form> -->
                     <div class="main" style="padding: 15px;">
-                    id:<input id="id" name="file" type="text"  ><br>
+                    file:<input id="file" name="file" type="text"  ><br>
                     <input   id="sendBtn" type="button" value="send"><br>
                     <pre  id="chatbox"></pre>
           </div>
