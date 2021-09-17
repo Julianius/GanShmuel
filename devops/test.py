@@ -44,9 +44,6 @@ def run_tests(branch_name, merger_name):
     else:
         run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'test-billing-staging', False, True)
         test_result = billing_test()
-        test_result = billing_test()
-        test_result = billing_test()
-        test_result = billing_test()
         run_docker_compose(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'test-billing-staging', True, False)
     return test_result
 
