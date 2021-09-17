@@ -109,7 +109,7 @@ def trucktest(provider_id):
             test = check(str(r.text), str(testvalue))
             if test == 1:
                 return "PUT to http://localhost:8081/trucks test not good"
-        for line in range(18, 19, 1):  # test for get trucks
+        for line in range(18, 19, 1):  # test for get truck
             linefromfile = readtest[line].replace('valuetochange', str(provider_id))
             jsonfromtext = json.loads(linefromfile)
             payload = jsonfromtext['GET']
