@@ -53,7 +53,7 @@ def run_tests(branch_name, merger_name):
 def billing_test():
     #os.environ["FLASK_APP"] = PATH_TEST + BRANCHES_ALLOWED[2] + '/Test/test.py'
     #res = os.system('flask run')#   bin/python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/Test/test.py')
-    os.system('sleep 10')
+    #os.system('sleep 10')
     res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/billing_test.py')
     #res = 0
     if res == SUCCESS_CODE:
@@ -65,8 +65,8 @@ def billing_test():
 
 def weight_test():
     #res = os.exec('/bin/python3 ' + PATH_TESTS + BRANCHES_ALLOWED[3] + '/app/test.py')
-    os.system("chmod +x test.py")
-    res = os.system('python ' + PATH_TEST + BRANCHES_ALLOWED[1] + '/weight/app/test.py')
+    #os.system("chmod +x test.py")
+    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[1] + '/weight/app/test.py')
     #res = 0
     if res == SUCCESS_CODE:
         #send_email('Billing team tests success', 'All the tests succeeded, good job!', team_leader, pusher)

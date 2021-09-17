@@ -7,8 +7,6 @@ TLD_WEIGHT = 'yael260640@gmail.com'
 TLD_BILLING = 'ravivnadiv2@gmail.com'
 PATH = DYNAMIC_PATH + 'app/'
 
-
-
 def send_committer_report():
     text = ''
     with open(PATH + 'commits.txt', 'r') as reader:
