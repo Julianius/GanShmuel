@@ -2,7 +2,6 @@ from test import run_tests
 from flask import Flask, request, render_template
 import os, os.path
 import re
-from monitor.script import script
 from mailing import *
 from utils import docker_compose_up
 from config import *
@@ -79,7 +78,7 @@ def build_app(data):
 
 @app.route('/monitor', methods=['GET'])
 def home():
-  script()
+  #script()
   return render_template('index.html')
 
 @app.route('/health', methods=['GET'])

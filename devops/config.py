@@ -23,3 +23,13 @@ APPS_PATHS = {
   'weight': DYNAMIC_PATH + 'app/weight-staging/weight',
   'billing': DYNAMIC_PATH + 'app/billing-staging/billing/Prod'
 }
+
+TEST_APPS_DB_PATHS = {
+  'weight': DYNAMIC_PATH + 'test/weight-staging/weight',
+  'billing': DYNAMIC_PATH + 'test/billing-staging/billing/Prod'
+}
+
+TEST_APPS_PATHS = {
+  'weight': DYNAMIC_PATH + 'test/weight-staging/weight',
+  'billing': DYNAMIC_PATH + 'test/billing-staging/billing/Prod'
+}
