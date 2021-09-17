@@ -203,7 +203,7 @@ def totalbill(provider_id):
     mycursor.execute("USE billdb")
     mycursor.execute(f"""SELECT name FROM Provider WHERE id={provider_id}""")
     for names in mycursor.fetchall():
-        name = names
+        name = names[0]
     time1 = request.args.get('from') #check times
     time2 = request.args.get('to')
     payload = {"from": time1, "to": time2}
@@ -211,12 +211,13 @@ def totalbill(provider_id):
     result = mycursor.fetchall()
     if result:
         for truck in result:
-            res = requests.get(f"http://172.28.0.5:5000/item/{truck}", params=payload)
+            res = requests.get(f"http://172.28.0.5:5000/item/{truck[0]}", params=payload)
             if res.text != "No data found":
                 truck_counter += 1
-                sessions = res.json()['sessions']
+                sessions1 = res.json()
+                sessions=sessions1['sessions']
                 session_count += len(sessions)
-                sessions = [3] # not part of the prodaction code give as good session with neto weigh
+                # sessions = [3] # not part of the prodaction code give as good session with neto weight
                 for session in sessions:
                     r_session = requests.get(f"http://172.28.0.5:5000/session/{session}").json()
                     product = r_session['product_name']
@@ -271,7 +272,7 @@ def clear_databases_test():
     truck_id2 = request.args.get('truck_id2')
     mycursor = billingdb.cursor()
     mycursor.execute("USE billdb")
-    mycursor.execute(f"DELETE FROM Trucks WHERE id= {int(provider_id)}")
+    mycursor.execute(f"DELETE FROM Provider WHERE id= {int(provider_id)}")
     mycursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id)}'")
     mycursor.execute(f"DELETE FROM Trucks WHERE id='{str(truck_id2)}'")
     return "ok"
