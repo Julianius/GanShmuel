@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import request
 import json
 
-def GET_item(id):
+def GET_item(request,id):
 	mysql = mysql_db()
 
 	fromTime = request.args.get('from') if request.args.get('from') else datetime.now().strftime("%Y%m%d000000")

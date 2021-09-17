@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    function api() {
+      var api = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
+
+      return "/weight";
+    }
+    function updateChat() {
+      $.get(api(),function(data) {
+        $("#chatbox").text(data);
+
+      })
+    }
+
+    function psendmessage() {
+
+      $.post(api(), $( "#pinform" ).serialize(), function(data) {
+        $("#chatbox").text(data);
+      })
+    }
+
+    $(document).ready(function() {
+      $("#chatbox").text('');
+      $("#psendBtn").click(psendmessage)
+    });
+  </script>
+  <head>
+    <style>
+    body {
+      font-family: "Lato", sans-serif;
+    }
+    .sidenav {
+      height: 100%;
+      width:200px;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      padding-top: 20px;
+    }
+    
+    .sidenav a {
+      padding: 6px 8px 6px 16px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+    }
+    
+    .sidenav a:hover {
+      color: #f1f1f1;
+    } 
+    .main {
+  margin-left: 210px; /* Same as the width of the sidenav */
+  font-size: 28px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+
+    </style>
+    </head> 
+  <body>  
+    <div class="sidenav">
+        <a href="{{ url_for('home') }}">
+            <i class="fa fa-home"></i> home
+        </a>
+        <a href="{{ url_for('uihealth') }}">
+          <i class="fa fa-home"></i> health
+      </a>
+      <a   href="{{ url_for('uibatch_weight') }}">
+          <i class="fas fa-tools"></i> batch-weight
+      </a>
+      <a href="{{ url_for('pweight') }}">
+          <i class="fa fa-home"></i> post weight
+      </a>
+      <a href="{{ url_for('gweight') }}">
+        <i class="fa fa-home"></i> get weight
+    </a>
+      <a   href="{{ url_for('uiitem') }}" >
+          <i class="fas fa-tools"></i>item
+      </a>
+      <a href="{{ url_for('uisession') }}">
+          <i class="fa fa-home"></i> session
+      </a>
+      <a   href="{{ url_for('uiunknown') }}">
+          <i class="fas fa-tools"></i> unknown
+      </a>
+          
+        </div>
+
+
+            
+                    <form id="pinform" class="main" method="POST" style="padding: 20px;">
+                        direction:<input name="direction" type="text"><br>
+                        containers:<input name="containers" type="text"><br>
+                        weight:<input name="weight" type="text"><br>
+                        unit:<input name="unit" type="text"><br>
+                        force:<input name="force" type="text"><br>
+                        product:<input name="product" type="text"><br>
+                        truck_id:<input name="truckid" type="text"><br>
+                        <input  id="psendBtn" type="button" value="send"><br>
+                      </form>
+                    <pre class="main" id="chatbox"></pre>
+          
+
+    </body>
+</html>
