@@ -10,4 +10,4 @@ services:
     ports: 
      - "8080:5000"
     environment:
-     HOST_USER: ${USER}
+     DYNAMIC_PATH: /home/${USER}/GanShmuel/
