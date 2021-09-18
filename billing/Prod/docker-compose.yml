@@ -8,10 +8,6 @@ services:
       - "3306"
     volumes:
       - ${DYNAMIC_PATH_DB}/db:/docker-entrypoint-initdb.d
-<<<<<<< HEAD
-=======
-#      - mysqldata:/var/lib/mysql
->>>>>>> b2f4c297f475f5455c5f0d48dd369396664f2877
     environment:
       MYSQL_ROOT_PASSWORD: 1234!
     healthcheck:
