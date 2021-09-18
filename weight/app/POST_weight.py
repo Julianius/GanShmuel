@@ -5,23 +5,34 @@ import json
 
 mySQL = mysql_db()
 
-def POST_weight():
+def POST_weight(request):
     
     try:
-        dir = request.args.get('direction')
-        containers = request.args.get('containers')
-        weight = request.args.get('weight')
-        unit = request.args.get('unit')
-        force = request.args.get('force')
-        product = request.args.get('product', 'NA')
-        truck_id = request.args.get('truckid')
+        dir = request.form['direction']
+        containers = request.form['containers']
+        weight = request.form['weight']
+        unit = request.form['unit']
+        force = request.form['force']
+        product = request.form['product']
+        truck_id = request.form['truckid']
+
+        weight = float(weight)
         
         date = time.strftime('%Y%m%d%H%M%S')
+                
+        containers_total_weight = []
+        containers_list = []
         
+        for container in containers.split(','):
+            containers_list.append(container)
+            # Must have known containers!
+            c_weight = mySQL.getData(f'SELECT weight from containers WHERE id = "{container}"')[0]['weight']          
+            containers_total_weight.append(c_weight)
+        container_weight = sum(containers_total_weight)
+                        
         tr_id = mySQL.getData(f'SELECT truckid from trucks WHERE id = {truck_id}')[0]['truckid']
-        container_weight = mySQL.getData(f'SELECT weight from containers WHERE id = "{containers}"')[0]['weight']
         truck_weight = mySQL.getData(f'SELECT weight from trucks WHERE id = "{truck_id}"')[0]['weight']
-        neto = netoWeight(float(weight), container_weight, truck_weight)
+        neto = netoWeight(weight, container_weight, truck_weight)
         
         last_dir = mySQL.getData(f'select direction from sessions where trucks_id = {truck_id} order by date desc limit 1')[0]['direction']
         
@@ -35,7 +46,11 @@ def POST_weight():
             createNewSession(dir, force, date, weight, truck_id, product)
             session_id = mySQL.getData(f'SELECT id from sessions WHERE trucks_id = {truck_id} order by date desc limit 1')
             session_id = session_id[0]['id']
-            
+            for container in containers_list:
+                query = (f'INSERT IGNORE into containers_has_sessions (containers_id, sessions_id) VALUES (%s, %s)')
+                data = (container, session_id)
+                mySQL.setData(query, data)
+
         elif dir == 'out':
             mySQL.updateData(f'UPDATE sessions SET neto = {neto} WHERE trucks_id = {truck_id} order by date desc limit 1')
             session_id = mySQL.getData(f'select id, date from sessions where trucks_id = {truck_id} order by date desc limit 1')
@@ -58,7 +73,6 @@ def POST_weight():
                 "neto": neto
             }
             return json.dumps(value)
-    
     except:
         return "Weight data is unavailable at the moment."
 
@@ -70,4 +84,4 @@ def createNewSession(direction, f, date, weight, truckid, product):
     
     
 def netoWeight(bruto, c_weight, t_weight):
-    return bruto - c_weight - t_weight
+    return bruto - c_weight - t_weight;
