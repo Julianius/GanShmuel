@@ -5,7 +5,7 @@ TLD_DEVOPS = 'shekel8@gmail.com'
 TLD_WEIGHT = 'yael260640@gmail.com'
 TLD_BILLING = 'ravivnadiv2@gmail.com'
 TLD_HELPER = 'vjulianiusv@gmail.com'
-PATH = '/home/ec2-user/GanShmuel/app/commits.txt'
+PATH = 'GanShmuel/app/commits.txt'
 
 def send_committer_report():
     text = ''
