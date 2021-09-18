@@ -6,10 +6,11 @@ SUCCESS_CODE = 0
 FAILURE_CODE = 1
 PATH_APP = '/GanShmuel/app/'
 PATH_TEST = '/GanShmuel/test/'
-WEIGHT='weight'
-BILLING='billing'
-STAGE='stage'
-MAIN='main'
+WEIGHT='Weight'
+BILLING='Billing'
+STAGE='Stage'
+MAIN='Main'
+DEVOPS='Devops'
 BRANCHES_ALLOWED = [ 'main', 'weight-staging', 'billing-staging' ]
 BRANCHES_FORBIDDEN = [ 'devops', 'weight', 'billing' ]
 
@@ -37,3 +38,7 @@ TEST_APPS_PATHS = {
   'weight': DYNAMIC_PATH + 'test/weight-staging/weight',
   'billing': DYNAMIC_PATH + 'test/billing-staging/billing/Prod'
 }
+HEADING_SUCCESS = 'team tests success'
+MESSAGE_SUCCESS = 'All tests passedd successfully! System is running and operational.'
+HEADING_FAILURE = 'team tests failure'
+MESSAGE_FAILURE = 'Some tests have failed. Please check!'

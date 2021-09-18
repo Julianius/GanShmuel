@@ -31,11 +31,11 @@ def build_app(data):
       if team[0] == "weight_team":
         team_lead_email = CONTACT_EMAILS["weight_team"]['yaelkadosh']
         pusher_email = CONTACT_EMAILS["weight_team"][pusher]
-        cur = 'weight-staging'
+        cur = WEIGHT
       elif team[0] == "billing_team":
         team_lead_email = CONTACT_EMAILS["billing_team"]['nadivravivz']
         pusher_email = CONTACT_EMAILS["billing_team"][pusher]
-        cur = 'billing-staging'
+        cur = BILLING
       else:
         team_lead_email = CONTACT_EMAILS["devops_team"]['matanshk']
         pusher_email = CONTACT_EMAILS["devops_team"][pusher]
@@ -47,15 +47,15 @@ def build_app(data):
     os.system('rm -rf ' + PATH_APP + 'temp')
     print('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH_APP + 'temp')
     os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH_APP + 'temp')
-    test_result = 0
+    test_result = SUCCESS_CODE
     test_result = run_tests(branch_name, merger_branch_name)
 
-    if test_result == 1:
-      if cur == 'weight-staging':
-        #send_email('Weight team tests failure', 'Some tests have failed please check', team_lead_email, pusher_email)
+    if test_result == FAILURE_CODE:
+      if cur == WEIGHT:
+        send_email(WEIGHT + ' ' + HEADING_FAILURE, MESSAGE_FAILURE, team_lead_email, pusher_email)
         pass
-      elif cur == 'billing-staging':
-        #send_email('Billing team tests failure', 'Some tests have failed please check', team_lead_email, pusher_email)
+      elif cur == BILLING:
+        send_email(BILLING + ' ' + HEADING_FAILURE, MESSAGE_FAILURE, team_lead_email, pusher_email)
         pass
       #return 1
 
@@ -75,6 +75,13 @@ def build_app(data):
       docker_compose_up('8083', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-staging', False)
     else:
       docker_compose_up('8081', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False)
+    
+    if cur == WEIGHT:
+      send_email(WEIGHT + ' ' + HEADING_SUCCESS, MESSAGE_SUCCESS, team_lead_email, pusher_email)
+      pass
+    elif cur == BILLING:
+      send_email(BILLING + ' ' + HEADING_SUCCESS, MESSAGE_SUCCESS, team_lead_email, pusher_email)
+      pass
 
 @app.route('/monitor', methods=['GET'])
 def home():
