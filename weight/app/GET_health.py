@@ -7,7 +7,7 @@ TODO - check POST services
 import requests
 
 def GET_health():
-	services = {"unknown","batch_weight/file","item/id","session/id"}
+	services = {"unknown","item/id","session/id","weight","batch_weight/file",""}
 	result = ""
 	for service in services:
 		req = requests.get(f"http://localhost:5000/{service}")
@@ -18,4 +18,4 @@ def GET_health():
 			result += f"\n Service {service} : ... ok \n"
 	return result
 if __name__ == '__main__':
-    tast()
+    GET_health()
