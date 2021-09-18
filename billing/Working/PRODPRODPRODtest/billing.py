@@ -148,7 +148,7 @@ def trucks():
                 cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
                 return Response("Ok", mimetype='text/plain')
             except mysql.connector.errors.IntegrityError:
-                return Response("truck id all ready exist", status=400)
+                return Response("truck id all ready exist", status=500)
         else:
             return Response(f"Provider {prov_id} not found - please enter provider to the providers list",
                             mimetype='text/plain')

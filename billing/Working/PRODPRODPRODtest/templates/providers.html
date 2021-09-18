@@ -1,5 +1,4 @@
-
-<html>
+  <html>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -12,7 +11,7 @@
     function updateChat() {
       $.get(room(),function(data) {
         $("#chatbox").text(data);
-        window.setTimeout(updateChat,10000);
+        window.setTimeout(updateChat,15000);
       })
     }
 
@@ -21,9 +20,9 @@
     }
 
     $(document).ready(function() {
-      $("#chatbox").text("Loading Rates...");
+      $("#chatbox").text("Loading Providers...");
       $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat);
+      window.setTimeout(updateChat,15000);
     });
 
   </script>
@@ -31,18 +30,6 @@
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
   </head>
   <body>
-  <div class="contentBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
-    <form id="inform" action="/api/rates.html" method="POST">
-      <h4> Choose File to Upload from this list: {{ mydir }} </h4>
-      <input name="msgfile" type=text>
-      <input id="sendBtn" type="button" value="send">
-    </form>
-    <h4> These are the current rates: </h4>
-    <h5 id="chatbox"></h5>
-  </div>
-  <div class="imageBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
-      <img src="../static/rates.png" alt="gan-shmuel" style="left : 1280px; position: relative;display: inline-block;height:250px;width:250px ">
-  </div>
   <nav class="headNev">
         <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
         <a class="headNevLink2" href="http://localhost:8081/health">Health </a>
@@ -51,5 +38,12 @@
         <a class="headNevLink1" href="http://localhost:8081/trucks">Trucks </a>
         <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
     </nav>
+  <div class="contentBlock" style="top:200px ">
+    <form id="inform" action="/api/provider.html" method="POST">
+      provider name:<input name="provider" type=text>
+      <input id="sendBtn" type="button" value="submit">
+    </form>
+    <pre id="box">enter new provider</pre>
+      </div>
   </body>
 </html>
