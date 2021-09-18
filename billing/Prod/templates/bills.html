@@ -1,0 +1,40 @@
+  <html>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+        function changeText2() {
+      var prov_id = document.getElementById('prov_id').value;
+      var lnk = document.getElementById('lnk');
+      lnk.href = "http://localhost:8081/bills/" + prov_id ;
+      window.location = "http://localhost:8081/bills/" + prov_id;
+    }
+
+    </script>
+  <head>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+  </head>
+  <body>
+  <nav class="headNev">
+        <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://localhost:8081/health">Health </a>
+        <a class="headNevLink1" href="http://localhost:8081/providers">Providers</a>
+        <a class="headNevLink2" href="http://localhost:8081/rates">Rates</a>
+        <a class="headNevLink1" href="http://localhost:8081/trucks">Trucks </a>
+        <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
+    </nav>
+    <div class="contentBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray;z-index: 2">
+        <h3> To issue a bill please enter a provider name </h3>
+           <a hidden>Link <a href="" id=lnk></a>
+    <br>
+  <input type='text' id='prov_id'/>
+  <input type='button' onclick='changeText2()' value='Enter' />
+    </a>
+    </div>
+     </div>
+  <div class="imageBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray;z-index: 0">
+      <img src="../static/contract-agreement-deal-business-signature-bill-icon-free-text-stencil-symbol-number-transparent-png-1775470.png" alt="gan-shmuel" style="left : 1320px; position: relative;display: inline-block;height:250px;width:250px ">
+  </div>
+
+  </body>
+</html>

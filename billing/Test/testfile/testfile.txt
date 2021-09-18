@@ -1,17 +1,17 @@
-{"POST":{"provider":"test_provider11"},"return":{"id":"valuetochange","name":"test_provider11"}}
-{"POST":{"provider":"test_provider11"},"return":"name exist"}
+{"POST":{"provider":"test_provider111"},"return":{"id":"valuetochange","name":"test_provider111"}}
+{"POST":{"provider":"test_provider111"},"return":"name exist"}
 
 
 {"POST":{"msgfile":"to_test_file/rates.xlsx"},"return":"Ok"}
 {"POST":{"msgfile":"norates.xlsx"},"return":"no such a file"}
 {"POST":{"msgfile":"to_test_file/ratesaftepost.xlsx"},"return":"Ok"}
 
-{"POST":{"Provider-Id":"valuetochange","Truck-Id":"12222"},"return":"Ok"}
-{"POST":{"Provider-Id":"valuetochange","Truck-Id":"12222"},"return":"truck id all ready exist"}
+{"POST":{"Provider-Id":"valuetochange","Truck-Id":"122222"},"return":"Ok"}
+{"POST":{"Provider-Id":"valuetochange","Truck-Id":"122222"},"return":"truck id all ready exist"}
 {"POST":{"Provider-Id":"99999","Truck-Id":"8"},"return":"Provider 99999 not found - please enter provider to the providers list"}
 {"GET":{"none"},"return":"Please enter truck license plate and provider id:"}
 
-{"PUT":{"provider_id":valuetochange},"value":12222 ,"return":"changed truck number 12222 to provider valuetochange"}
+{"PUT":{"provider_id":valuetochange},"value":122222 ,"return":"changed truck number 122222 to provider valuetochange"}
 {"PUT":{"provider_id":"99999"},"value":12222,"return":"Provider 99999 not found -please enter provider to the providers list"}
 {"PUT":{"provider_id":valuetochange},"value":9999 ,"return":"changed truck number 9999 to provider valuetochange"}
 
@@ -28,4 +28,4 @@
 
 
 
-{"GET":{"provider_id":valuetochange, "truck_id":12222, "truck_id2":9999}}
+{"GET":{"provider_id":valuetochange, "truck_id":122222, "truck_id2":9999}}
