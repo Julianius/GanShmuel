@@ -1,7 +1,7 @@
 import os
 from mailing import *
 from utils import *
-from config import *
+import config
 
 TESTING_PORT = '8085'
 
@@ -24,31 +24,40 @@ def check_contacts(branch_name, pusher, merger_name):
     return result
 
 def run_tests(branch_name, merger_name):
+    print('rm -rf ' + PATH_TEST + branch_name)
     os.system('rm -rf ' + PATH_TEST + branch_name)
+    print('mkdir -p ' + PATH_TEST + branch_name)
     os.system('mkdir -p ' + PATH_TEST + branch_name)
+    print('cp -a '+ PATH_APP + 'temp/* ' + PATH_APP + 'temp/.* ' + PATH_TEST + branch_name + '/ 2>/dev/null')
     os.system('cp -a '+ PATH_APP + 'temp/* ' + PATH_APP + 'temp/.* ' + PATH_TEST + branch_name + '/ 2>/dev/null')
 
+    print(BRANCHES_ALLOWED[0])
+    print(BRANCHES_ALLOWED[1])
+    print(BRANCHES_ALLOWED[2])
+    print(merger_name)
     if branch_name == BRANCHES_ALLOWED[0]:
+        print('HERE 1')
         if merger_name == BRANCHES_ALLOWED[1]:
-            docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], TEST_APPS_DB_PATHS['weight'], TEST_APPS_PATHS['weight'], 'test-weight-main', True)
+            docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], TEST_APPS_DB_PATHS['weight'], TEST_APPS_PATHS['weight'], str(config.SWITCHER_MAIN_WEIGHT) + 'main', True)
             test_result = weight_test()
             docker_compose_down(PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], 'test-weight-main')
         elif merger_name == BRANCHES_ALLOWED[2]:
-            docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], TEST_APPS_DB_PATHS['billing'], TEST_APPS_PATHS['billing'], 'test-billing-main', True)
+            print('HERE 2')
+            docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], TEST_APPS_DB_PATHS['billing'], TEST_APPS_PATHS['billing'], str(config.SWITCHER_MAIN_BILLING) + 'main', True)
             test_result = billing_test()
             docker_compose_down(PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], 'test-billing-main')
     elif branch_name == BRANCHES_ALLOWED[1]:
-        docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], TEST_APPS_DB_PATHS['weight'], TEST_APPS_PATHS['weight'], 'test-weight-staging', True)
+        docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], TEST_APPS_DB_PATHS['weight'], TEST_APPS_PATHS['weight'], str(config.SWITCHER_STAGING_WEIGHT) + 'staging', True)
         test_result = weight_test()
         docker_compose_down(PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['weight'], 'test-weight-staging')
     else:
-        docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], TEST_APPS_DB_PATHS['billing'], TEST_APPS_PATHS['billing'], 'test-billing-staging', True)
+        docker_compose_up(TESTING_PORT, PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], TEST_APPS_DB_PATHS['billing'], TEST_APPS_PATHS['billing'], str(config.SWITCHER_STAGING_BILLING) + 'staging', True)
         test_result = billing_test()
         docker_compose_down(PATH_TEST + branch_name + DOCKER_COMPOSE_PATHS['billing'], 'test-billing-staging')
     return test_result  
 
 def billing_test():
-    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/billing_test.py')
+    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/testyo.py')
     #res = 0
     if res == SUCCESS_CODE:
         return SUCCESS_CODE

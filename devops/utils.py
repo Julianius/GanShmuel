@@ -18,13 +18,13 @@ def docker_compose_up(port, path, path_to_db, path_to_app, name, do_build):
   os.environ["DYNAMIC_PATH_APP"] = path_to_app
   build = ''
   if do_build:
-    build = '--build'  
-  #os.system('docker-compose -f ' + path + ' -p ' + name + ' up -d ' + build)
-  os.system('docker-compose -f ' + path + ' up -d ' + build)
+    build = '--build' 
+  os.system('docker-compose -f ' + path + ' -p ' + name + ' up -d ' + build)
+  #os.system('docker-compose -f ' + path + ' up -d ' + build)
 
 def docker_compose_down(path, name):
-  #os.system('docker-compose -f ' + path + ' -p ' + name + ' down -v')
-  os.system('docker-compose -f ' + path + ' down -v')
+  os.system('docker-compose -f ' + path + ' -p ' + name + ' down -v')
+  #os.system('docker-compose -f ' + path + ' down -v')
 
 def add_to_committer_report(path, timestamp, branch_name, merger_branch_name, pusher):
   f = open(path + 'commits.txt', 'a')

@@ -1,10 +1,10 @@
-from test import run_tests
 from flask import Flask, request, render_template
 import os, os.path
 import re
+from test import run_tests
+from utils import docker_compose_down, docker_compose_up
 from mailing import *
-from utils import docker_compose_up
-from config import *
+import config
 
 app = Flask(__name__, template_folder='monitor/templates')
 
@@ -52,10 +52,10 @@ def build_app(data):
 
     if test_result == FAILURE_CODE:
       if cur == WEIGHT:
-        send_email(WEIGHT + ' ' + HEADING_FAILURE, MESSAGE_FAILURE, team_lead_email, pusher_email)
+        #send_email(WEIGHT + ' ' + HEADING_FAILURE, MESSAGE_FAILURE, team_lead_email, pusher_email)
         pass
       elif cur == BILLING:
-        send_email(BILLING + ' ' + HEADING_FAILURE, MESSAGE_FAILURE, team_lead_email, pusher_email)
+        #send_email(BILLING + ' ' + HEADING_FAILURE, MESSAGE_FAILURE, team_lead_email, pusher_email)
         pass
       #return 1
 
@@ -65,22 +65,38 @@ def build_app(data):
     os.system('rm -rf ' + PATH_APP + 'temp')
 
     add_to_committer_report(timestamp, branch_name, merger_branch_name, pusher)
-
+    
     if branch_name == BRANCHES_ALLOWED[0]:
       if merger_branch_name == BRANCHES_ALLOWED[1]:
-        docker_compose_up('8084', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-main', False)
+        config.SWITCHER_MAIN_WEIGHT = 1 - config.SWITCHER_MAIN_WEIGHT
+        docker_compose_down(PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], str(config.SWITCHER_MAIN_WEIGHT) + 'main')
+        config.SWITCHER_MAIN_WEIGHT = 1 - config.SWITCHER_MAIN_WEIGHT
+        docker_compose_up('8084', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], str(config.SWITCHER_MAIN_WEIGHT) + 'main', False)
+        config.SWITCHER_MAIN_WEIGHT = 1 - config.SWITCHER_MAIN_WEIGHT
       elif merger_branch_name == BRANCHES_ALLOWED[2]:
-        docker_compose_up('8082', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-main', False)
+        config.SWITCHER_MAIN_BILLING = 1 - config.SWITCHER_MAIN_BILLING
+        docker_compose_down(PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], str(config.SWITCHER_MAIN_BILLING) + 'main')
+        config.SWITCHER_MAIN_BILLING = 1 - config.SWITCHER_MAIN_BILLING
+        docker_compose_up('8082', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], str(config.SWITCHER_MAIN_BILLING) + 'main', False)
+        config.SWITCHER_MAIN_BILLING = 1 - config.SWITCHER_MAIN_BILLING
     elif branch_name == BRANCHES_ALLOWED[1]:
-      docker_compose_up('8083', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], 'weight-staging', False)
+      config.SWITCHER_STAGING_WEIGHT = 1 - config.SWITCHER_STAGING_WEIGHT
+      docker_compose_down(PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], str(config.SWITCHER_STAGING_WEIGHT) + 'staging')
+      config.SWITCHER_STAGING_WEIGHT = 1 - config.SWITCHER_STAGING_WEIGHT
+      docker_compose_up('8083', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['weight'], APPS_DB_PATHS['weight'], APPS_PATHS['weight'], str(config.SWITCHER_STAGING_WEIGHT) + 'staging', False)
+      config.SWITCHER_STAGING_WEIGHT = 1 - config.SWITCHER_STAGING_WEIGHT
     else:
-      docker_compose_up('8081', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], 'billing-staging', False)
+      config.SWITCHER_STAGING_BILLING = 1 - config.SWITCHER_STAGING_BILLING
+      docker_compose_down(PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], str(config.SWITCHER_STAGING_BILLING) + 'staging')
+      config.SWITCHER_STAGING_BILLING = 1 - config.SWITCHER_STAGING_BILLING
+      docker_compose_up('8081', PATH_APP + branch_name + DOCKER_COMPOSE_PATHS['billing'], APPS_DB_PATHS['billing'], APPS_PATHS['billing'], str(config.SWITCHER_STAGING_BILLING) + 'staging', False)
+      config.SWITCHER_STAGING_BILLING = 1 - config.SWITCHER_STAGING_BILLING
     
     if cur == WEIGHT:
-      send_email(WEIGHT + ' ' + HEADING_SUCCESS, MESSAGE_SUCCESS, team_lead_email, pusher_email)
+      #send_email(WEIGHT + ' ' + HEADING_SUCCESS, MESSAGE_SUCCESS, team_lead_email, pusher_email)
       pass
     elif cur == BILLING:
-      send_email(BILLING + ' ' + HEADING_SUCCESS, MESSAGE_SUCCESS, team_lead_email, pusher_email)
+      #send_email(BILLING + ' ' + HEADING_SUCCESS, MESSAGE_SUCCESS, team_lead_email, pusher_email)
       pass
 
 @app.route('/monitor', methods=['GET'])
