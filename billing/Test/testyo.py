@@ -114,7 +114,7 @@ def trucktest(provider_id):
             jsonfromtext = json.loads(linefromfile)
             payload = jsonfromtext['GET']
             truck_id = jsonfromtext['value']
-            URL = "http://localhost:8081/truck/" + str(truck_id)
+            URL = "http://localhost:8081/trucks/" + str(truck_id)+"/"
             r = requests.get(url=URL, params=payload)
             if r.status_code == 200:
                 try:
@@ -128,10 +128,26 @@ def trucktest(provider_id):
             if test == 1:
                 return "GET to http://localhost:8081/api/truck/<truck_id> test not good"
         return 0
+def billtest(provider_id):
+
+    with open(f'testfile/testfile.txt', "r") as testfile:
+        readtest = testfile.readlines()
+    for line in range(21, 22, 1):  # test for bill
+        linefromfile = readtest[line].replace('valuetochange', str(provider_id))
+        jsonfromtext = json.loads(linefromfile)
+        prov_id = jsonfromtext['value']
+        # payload = jsonfromtext['value']
+        URL = "http://localhost:8081//bills/"+str(prov_id)+"/"
+        r = requests.get(url=URL)
+        testvalue = jsonfromtext['return']
+        test = check(str(r.text), str(testvalue))
+        if test == 1:
+            return "GET to http://localhost:8081//bills/ test not good"
+    return 0
 def cleartestdatabases(provider_id):
     with open(f'testfile/testfile.txt', "r") as testfile:
         readtest = testfile.readlines()
-        linefromfile = readtest[24].replace('valuetochange', str(provider_id))
+        linefromfile = readtest[30].replace('valuetochange', str(provider_id))
         jsonfromtext = json.loads(linefromfile)
         payload = jsonfromtext['GET']
         print(payload)
@@ -143,14 +159,14 @@ def cleartestdatabases(provider_id):
 def main():
     first = checkhealth()
     checkprov  = checkprovider()
-    print(checkprov)
     sectest = checkprov[0]
     provider_id_test = checkprov[1]
     thertest = checkrates()
     forth  = trucktest(provider_id_test)
-    print(sectest, first, thertest, forth)
+    fifth  = billtest(provider_id_test)
+    print(sectest, first, thertest, forth,fifth)
     cleartestdatabases(provider_id_test)
-    if first == 0 and sectest == 0 and thertest == 0 and forth == 0:
+    if first == 0 and sectest == 0 and thertest == 0 and forth == 0 and fifth == 0:
         print("no error found")
         return 0
     else:

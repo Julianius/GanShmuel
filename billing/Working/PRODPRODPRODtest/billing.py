@@ -144,8 +144,11 @@ def trucks():
         cursor.execute(f"SELECT id FROM Provider WHERE id='{str(prov_id)}'")
         results = cursor.fetchall()
         if results:
-            cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
-            return Response("Ok", mimetype='text/plain')
+            try:
+                cursor.execute(f"INSERT INTO Trucks(id, provider_id) VALUES('{str(truck_id)}', '{str(prov_id)}')")
+                return Response("Ok", mimetype='text/plain')
+            except mysql.connector.errors.IntegrityError:
+                return Response("truck id all ready exist", status=500)
         else:
             return Response(f"Provider {prov_id} not found - please enter provider to the providers list",
                             mimetype='text/plain')
@@ -200,7 +203,7 @@ def trucktimes(truck_id):
         time2 = timeend.strftime("%Y%m%d%H%M%S")
 
     payload = {"from": time1, "to": time2}
-    res = requests.get(f"http://172.30.0.5:5000/item/{truck_id}", params=payload)
+    res = requests.get(f"http://172.29.0.5:5000/item/{truck_id}", params=payload)
     if res.text == "No data found":
         return Response({"404"}, status=404)
     return res.json()
@@ -208,7 +211,7 @@ def trucktimes(truck_id):
 
 @app.route('/bills/<provider_id>/')
 def totalbill(provider_id):
-    time1 = request.args.get('from') #check times
+    time1 = request.args.get('from') 
     time2 = request.args.get('to')
     timetest1 = str(time1)
     timetest2 = str(time2)
@@ -251,20 +254,16 @@ def totalbill(provider_id):
     result = mycursor.fetchall()
     if result:
         for truck in result:
-            res = requests.get(f"http://172.30.0.5:5000/item/{truck[0]}", params=payload)
+            res = requests.get(f"http://172.29.0.5:5000/item/{truck[0]}", params=payload)
             if res.text != "No data found":
                 truck_counter += 1
                 sessions1 = res.json()
                 sessions=sessions1['sessions']
                 session_count += len(sessions)
-                # sessions = [3] # not part of the prodaction code give as good session with neto weight
                 for session in sessions:
-                    r_session = requests.get(f"http://172.30.0.5:5000/session/{session}").json()
+                    r_session = requests.get(f"http://172.29.0.5:5000/session/{session}").json()
                     product = r_session['product_name']
-                    try:
-                        neto = int(r_session['neto'])
-                    except:
-                        continue
+                    neto = int(r_session['neto'])
                     if product in product_dic:
                         product_dic[product]['amount'] += neto
                         product_dic[product]['count'] += 1
