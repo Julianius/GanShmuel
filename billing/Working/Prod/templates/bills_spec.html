@@ -8,7 +8,13 @@
       var prov_id = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
       return "/bills/"+ prov_id;
     }
-
+    function provider_number() {
+        return  window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    }
+    function myFunction() {
+      var number = "Provider's ID " +provider_number();
+      document.getElementById("providers_number").innerHTML = number;
+    }
         function changeText2() {
       var t1 = document.getElementById('t1').value;
       var t2 = document.getElementById('t2').value;
@@ -22,8 +28,8 @@
   <head>
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
   </head>
-  <body>
-  <nav class="headNev">
+  <body onload="myFunction()">
+   <nav class="headNev">
         <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
         <a class="headNevLink2" href="http://localhost:8081/health">Health </a>
         <a class="headNevLink1" href="http://localhost:8081/providers">Providers</a>
@@ -31,8 +37,9 @@
         <a class="headNevLink1" href="http://localhost:8081/trucks">Trucks </a>
         <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
     </nav>
-    <div class="contentBlock" style="top:200px ">
-    <p> Please enter the wanted dates:</p>
+    <div class="contentBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
+        <h2 id="providers_number"></h2>
+    <h3> Please enter the wanted dates:</h3>
    <a hidden>Link <a href="" id=lnk> </a>
   <br>
   <input type='text' id='t1'/>
@@ -40,5 +47,8 @@
   <input type='button' onclick='changeText2()' value='Enter' />
     </a>
     </div>
+  <div class="imageBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray;z-index: 0;">
+      <img src="../static/contract-agreement-deal-business-signature-bill-icon-free-text-stencil-symbol-number-transparent-png-1775470.png" alt="gan-shmuel" style="left : 1320px; position: relative;display: inline-block;height:250px;width:250px ">
+  </div>
   </body>
 </html>

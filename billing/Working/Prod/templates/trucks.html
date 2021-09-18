@@ -52,7 +52,8 @@
         <a class="headNevLink1" href="http://localhost:8081/trucks">Trucks </a>
         <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
     </nav>
-  <div class="contentBlock" style="top:200px ">
+  <div class="contentBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
+      <h3>To enter a new provider's truck please enter truck number and provider's id:</h3>
     <form id="inform" action="/api/" method="POST">
       Provider Id:<input name="Provider-Id" type=text>
       Truck Id:<input name="Truck-Id" type=text>
@@ -60,10 +61,14 @@
     </form>
    <a hidden>Link <a href="" id=lnk> </a>
   <br>
-   <p>To inspect a specific truck enter truck number:</p>
+   <h3>To inspect a specific truck enter truck number:</h3>
   <input type='text' id='userInput'/>
   <input type='button' onclick='changeText2()' value='Enter' />
     </a>
+  </div>
+     </div>
+  <div class="imageBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
+      <img src="../static/favpng_transport-vehicle-car-logo-truck.png" alt="gan-shmuel" style="left : 1280px; position: relative;display: inline-block;height:350px;width:380px ">
   </div>
   </body>
 </html>
