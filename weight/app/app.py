@@ -6,16 +6,13 @@ from GET_weight import GET_weight
 from GET_item import GET_item
 from POST_batch_weight import POST_batch_weight
 from POST_weight import POST_weight
-
 from GET_session import GET_session
-from test import BasicTestCase
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    #return "Hello Blue Team"
-    return BasicTestCase
+    return "Hello Blue Team"
 
 @app.route("/health", methods=['GET'])
 def health():
