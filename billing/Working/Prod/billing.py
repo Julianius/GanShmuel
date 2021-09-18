@@ -321,7 +321,12 @@ def clear_databases_test():
 
 if __name__ == '__main__':
     connectdb = True
+    counter = 60 
     while connectdb:
+        counter -= 1
+        time.sleep(1)
+        if counter == 0:
+            break
         try:
             billingdb = mysql.connector.connect(
                 host="billingdb",

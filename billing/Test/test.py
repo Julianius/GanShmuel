@@ -184,4 +184,16 @@ def main():
         return 1
 
 
+
+testfile = True
+counter = 60
+URL = "http://localhost:8081/"
+res = requests.get(url=URL)
+while testfile:
+    counter -= 1
+    time.sleep(1)
+    if res.status_code == 200:
+        break
+    elif counter == 0:
+        break
 main()
