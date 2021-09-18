@@ -11,7 +11,7 @@
     function updateChat() {
       $.get(room(),function(data) {
         $("#chatbox").text(data);
-        window.setTimeout(updateChat,1500);
+        window.setTimeout(updateChat,15000);
       })
     }
 
@@ -22,7 +22,7 @@
     $(document).ready(function() {
       $("#chatbox").text("Loading Providers...");
       $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat,1500);
+      window.setTimeout(updateChat,15000);
     });
 
   </script>
@@ -31,10 +31,12 @@
   </head>
   <body>
   <nav class="headNev">
-        <a class="headNevLink1" href="Index.html">  <i>Index</i></a>
-        <a class="headNevLink2" href="providers.html">Providers</a>
-        <a class="headNevLink2" href="rates.html">Rates</a>
-        <a class="headNevLink2" href="trucks.html">Trucks </a>
+        <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://localhost:8081/health">Health </a>
+        <a class="headNevLink1" href="http://localhost:8081/providers">Providers</a>
+        <a class="headNevLink2" href="http://localhost:8081/rates">Rates</a>
+        <a class="headNevLink1" href="http://localhost:8081/trucks">Trucks </a>
+        <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
     </nav>
   <div class="contentBlock" style="top:200px ">
     <form id="inform" action="/api/provider.html" method="POST">

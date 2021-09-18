@@ -2,7 +2,7 @@
 
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 
     <script type="text/javascript">
@@ -14,7 +14,7 @@
     function updateChat() {
       $.get(room(),function(data) {
         $("#chatbox").text(data);
-        window.setTimeout(updateChat,1500);
+        window.setTimeout(updateChat,15000);
       })
     }
 
@@ -22,25 +22,22 @@
       $.post( room(), $( "#inform" ).serialize() );
     }
 
-    $(document).ready(function() {
-      $("#chatbox").text("Loading trucks...");
-      $("#sendBtn").click(sendmessage)
-      $("#sendBtn2").click(function () {
-        var sendData = $('#inform2').val();
-        $.ajax({
-          url: 'http://localhost:8081/api/trucks.html',    //Your api url
-          type: 'PUT',   //type is any HTTP method
-          data: {
-            data: sendData
-          },      //Data as js object
-          success: function () {
-          }
-        })
-        console.log("click");
+    function changeText2() {
+      var userInput = document.getElementById('userInput').value;
+      var lnk = document.getElementById('lnk');
+      lnk.href = "http://localhost:8081/trucks.html/" + userInput;
+      window.location = "http://localhost:8081/trucks.html/" + userInput;
+    }
 
-        window.setTimeout(updateChat, 1500);
-      });
+
+
+
+    $(document).ready(function() {
+      $("#chatbox").text("Loading Trucks...");
+      $("#sendBtn").click(sendmessage)
+        window.setTimeout(updateChat, 15000);
     });
+
 
   </script>
   <head>
@@ -59,12 +56,12 @@
       Truck Id:<input name="Truck-Id" type=text>
       <input id="sendBtn" type="button" value="send">
     </form>
-    <form id="inform2" action="/api/" method="PUT">
-      Provider Name:<input name="Provider-Name" type=text>
-      Truck Id:<input name="Truck-Id" type=text>
-      <input id="sendBtn2" type="button" value="update">
-    </form>
-    </div>
-    <pre id="chatbox"> Please enter truck license plate and provider id </pre>
+   <a hidden>Link <a href="" id=lnk> </a>
+  <br>
+   <p>To inspect a specific truck enter truck number:</p>
+  <input type='text' id='userInput'/>
+  <input type='button' onclick='changeText2()' value='Enter' />
+    </a>
+  </div>
   </body>
 </html>
