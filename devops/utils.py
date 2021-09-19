@@ -1,17 +1,4 @@
 import os
-
-#def run_docker_compose(port, path, path_to_db, path_to_app, name, run_down, do_build):
-#  os.environ["DYNAMIC_PORT"] = port
-#  os.environ["DYNAMIC_PATH_DB"] = path_to_db
-#  os.environ["DYNAMIC_PATH_APP"] = path_to_app
-#  build = ''
-#  if do_build:
-#    build = '--build'
-#  if run_down:
-#    os.system('docker-compose -f ' + path + ' -p ' + name + ' down -v')
-#  else:
-#    os.system('docker-compose -f ' + path + ' -p ' + name + ' up -d ' + build + ' --force-recreate')
-
 def docker_compose_up(port, path, path_to_db, path_to_app, name, do_build):
   os.environ["DYNAMIC_PORT"] = port
   os.environ["DYNAMIC_PATH_DB"] = path_to_db

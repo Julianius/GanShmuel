@@ -48,6 +48,7 @@ def build_app(data):
     print('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH_APP + 'temp')
     os.system('git clone -b ' + branch_name + ' ' + REPO + ' ' + PATH_APP + 'temp')
     test_result = SUCCESS_CODE
+    
     test_result = run_tests(branch_name, merger_branch_name)
 
     if test_result == FAILURE_CODE:

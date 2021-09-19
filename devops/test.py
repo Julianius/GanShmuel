@@ -1,6 +1,4 @@
 import os
-
-import test
 from mailing import *
 from utils import *
 import config

@@ -1,15 +1,12 @@
 import smtplib
 from config import *
 
-#SENDER_EMAIL = 'bluedevopsdeveleap@gmail.com'
-#PASSWORD = 'blue123!'
 SENDER_EMAIL = 'develeapblueteum@gmail.com'
 PASSWORD = 'blue123!'
 SERVER_NAME = 'smtp.gmail.com'
 SERVER_CODE = 587
 
 def send_email(subject, text, team_leader = None, pusher = None, rec_emails = None):
-    #rec_emails=['vjulianiusv@gmail.com']
     if rec_emails == None:
         if team_leader == pusher:
             rec_emails = [team_leader]
