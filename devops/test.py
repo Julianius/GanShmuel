@@ -57,7 +57,7 @@ def run_tests(branch_name, merger_name):
     return test_result  
 
 def billing_test():
-    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/testyo.py')
+    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/test.py')
     #res = 0
     if res == SUCCESS_CODE:
         return SUCCESS_CODE
