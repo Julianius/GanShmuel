@@ -4,6 +4,8 @@ services:
 
   billingdb: 
     image: mysql:8.0.26
+    networks:
+      - coolnet
     ports:
       - "3306"
     environment:
@@ -19,6 +21,8 @@ services:
 
   billingapp:
     build: .
+    networks:
+      - coolnet    
     volumes:
       - ./rates:/in
     ports:
@@ -29,5 +33,7 @@ services:
 volumes:
   mysqldata:
     
-
+networks:
+  coolnet:
+    driver: bridge
 
