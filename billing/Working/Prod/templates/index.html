@@ -1,49 +1,26 @@
   <html>
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-  <script>
-    function room() {
-      var room = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
-      if (room=='') room = 'general';
-      return "/api/"+room;
-    }
-
-    function updateChat() {
-      $.get(room(),function(data) {
-        $("#chatbox").text(data);
-        window.setTimeout(updateChat,1500);
-      })
-    }
-
-    function sendmessage() {
-      $.post( room(), $( "#inform" ).serialize() );
-    }
-
-    $(document).ready(function() {
-      $("#chatbox").text("Loading chat...");
-      $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat,1500);
-    });
-
-  </script>
   <head>
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+      <link rel="stylesheet" href="../static/styles/style.css">
   </head>
   <body>
   <nav class="headNev">
-        <a class="headNevLink1" href="Index.html">  <i>Index</i></a>
-        <a class="headNevLink2" href="providers.html">Providers</a>
-        <a class="headNevLink2" href="rates.html">Rates</a>
-        <a class="headNevLink2" href="trucks.html">Trucks </a>
+        <a class="headNevLink1" href="http://localhost:8081/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://localhost:8081/health">Health </a>
+        <a class="headNevLink1" href="http://localhost:8081/providers">Providers</a>
+        <a class="headNevLink2" href="http://localhost:8081/rates">Rates</a>
+        <a class="headNevLink1" href="http://localhost:8081/trucks">Trucks </a>
+        <a class="headNevLink2" href="http://localhost:8081/bills">Bills </a>
     </nav>
-    <div class="contentBlock" style="top:200px ">
-    <h3> HELLO! You are Connected to server: {{ myhostname }}, IP Address: {{ myipaddr }}</h3>
-    <form id="inform" action="/api/index.html" method="POST">
-      User name:<input name="username" type=text>
-      message:<input name="msg" type=text>
-      <input id="sendBtn" type="button" value="send">
-    </form>
+    <div class="imageBlock" style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
+        <h2> Billing Services - " Gan Shmuel"</h2>
+        <img src="../static/index.png" alt="gan-shmuel" style="left : 1320px; position: relative;display: inline-block ">
     </div>
+
+
+
+
   </body>
 </html>

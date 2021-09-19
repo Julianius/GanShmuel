@@ -21,7 +21,7 @@ body {
 .headNev{
     background-color: #F9F6F2;
     font-family: "poppins Black 900",sans-serif;
-    font-size: 125%;
+    font-size: 150%;
     position: fixed;
     top: 0;
     left: 0;
@@ -89,6 +89,15 @@ body {
     height: 300px;
     width: 1300px;
     margin: 0;
+    z-index:1;
+}
+.imageBlock{
+    display: inline-block;
+    position: absolute;
+    height: 300px;
+    width: 1300px;
+    margin: 0;
+    z-index:0;
 }
 
 .mainHeading{
@@ -104,6 +113,15 @@ body {
     display: inline-block;
     color:#495464 ;
     margin-left: 5px;
-
-
 }
+
+.circular_image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: blue;
+  display:inline-block;
+  vertical-align:middle;
+}
+

@@ -12,7 +12,7 @@
     function updateChat() {
       $.get(room(),function(data) {
         $("#chatbox").text(data);
-        window.setTimeout(updateChat,15000);
+        window.setTimeout(updateChat,10000);
       })
     }
 
@@ -23,7 +23,7 @@
     $(document).ready(function() {
       $("#chatbox").text("Loading Rates...");
       $("#sendBtn").click(sendmessage)
-      window.setTimeout(updateChat,15000);
+      window.setTimeout(updateChat);
     });
 
   </script>
@@ -31,20 +31,25 @@
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
   </head>
   <body>
-  <div class="contentBlock" style="top:200px ">
+  <div class="contentBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
     <form id="inform" action="/api/rates.html" method="POST">
-      <pre> Choose File to Upload from this list: {{ mydir }} </pre>
+      <h4> Choose File to Upload from this list: {{ mydir }} </h4>
       <input name="msgfile" type=text>
       <input id="sendBtn" type="button" value="send">
     </form>
-    <h3> These are the current rates: </h3>
-    <pre id="chatbox"></pre>
+    <h4> These are the current rates: </h4>
+    <h5 id="chatbox"></h5>
   </div>
-    <nav class="headNev">
-        <a class="headNevLink1" href="Index.html">  <i>Index</i></a>
-        <a class="headNevLink2" href="providers.html">Providers</a>
-        <a class="headNevLink2" href="rates.html">Rates</a>
-        <a class="headNevLink2" href="trucks.html">Trucks </a>
+  <div class="imageBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
+      <img src="../static/rates.png" alt="gan-shmuel" style="left : 1280px; position: relative;display: inline-block;height:250px;width:250px ">
+  </div>
+  <nav class="headNev">
+        <a class="headNevLink1" href="http://3.123.232.208:8082/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/health">Health </a>
+        <a class="headNevLink1" href="http://3.123.232.208:8082/providers">Providers</a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/rates">Rates</a>
+        <a class="headNevLink1" href="http://3.123.232.208:8082/trucks">Trucks </a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/bills">Bills </a>
     </nav>
   </body>
 </html>

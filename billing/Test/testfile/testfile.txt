@@ -1,3 +1,31 @@
-{"POST":{"provider":"aqa"},"value":{"id":"valuetochange","name":"aqa"},"return":{"id":"valuetochange","name":"aqa"}}
-{"POST":{"provider":"aqa"},"value":{"id":"valuetochange","name":"aqa"},"return":"name exist"}
-{"POST":{"provider":"ravivtt"},"value":{"id":"valuetochange","name":"ravivtt"},"return":{"id":"valuetochange","name":"ravivtt"}}
+{"POST":{"provider":"test_provider111"},"return":{"id":"valuetochange","name":"test_provider111"}}
+{"POST":{"provider":"test_provider111"},"return":"name exist"}
+
+
+{"POST":{"msgfile":"to_test_file/rates.xlsx"},"return":"Ok"}
+{"POST":{"msgfile":"norates.xlsx"},"return":"no such a file"}
+{"POST":{"msgfile":"to_test_file/ratesaftepost.xlsx"},"return":"Ok"}
+
+{"POST":{"Provider-Id":"valuetochange","Truck-Id":"122222"},"return":"Ok"}
+{"POST":{"Provider-Id":"valuetochange","Truck-Id":"122222"},"return":"truck id all ready exist"}
+{"POST":{"Provider-Id":"99999","Truck-Id":"8"},"return":"Provider 99999 not found - please enter provider to the providers list"}
+{"GET":{"none"},"return":"Please enter truck license plate and provider id:"}
+
+{"PUT":{"provider_id":valuetochange},"value":122222 ,"return":"changed truck number 122222 to provider valuetochange"}
+{"PUT":{"provider_id":"99999"},"value":12222,"return":"Provider 99999 not found -please enter provider to the providers list"}
+{"PUT":{"provider_id":valuetochange},"value":9999 ,"return":"changed truck number 9999 to provider valuetochange"}
+
+
+{"GET":{"from": 19900101010101, "to":30000101010101},"value":"3","return":"Ok"}
+{"GET":{"from": 19900101010101, "to":30000101010101},"value":"65646465","return":"404"}
+
+{"GET":{"from": 19900101010101, "to":30000101010101},"value":"3","return":"Provider 3 not found - please enter provider to the providers list"}
+{"GET":{"from": 19900101010101, "to":30000101010101},"value":"valuetochange","return":"Not working"}
+{"GET":{"from": 19900101010101, "to":30000101010101},"value":"valuetochange","return":"Not working"}
+
+
+
+
+
+
+{"GET":{"provider_id":valuetochange, "truck_id":122222, "truck_id2":9999}}

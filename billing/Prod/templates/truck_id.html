@@ -5,23 +5,29 @@
     <script type="text/javascript">
     function truck_id() {
       var truck_id = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
-      return "/trucks.html/"+truck_id;
+      return "/trucks/"+ truck_id;
+    }
+      function truck_number() {
+          return  window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
     }
 
-    function updateChat() {
-      $.get(room(),function(data) {
-        $("#chatbox").text(data);
-        window.setTimeout(updateChat,15000);
-      })
+      function changeText2() {
+      var t1 = document.getElementById('t1').value;
+      var t2 = document.getElementById('t2').value;
+      var lnk = document.getElementById('lnk');
+      lnk.href = "http://3.123.232.208:8082" + truck_id() +"/?from=" +t1 +"&to=" +t2 ;
+      window.location = "http://3.123.232.208:8082" +truck_id() +"/?from=" +t1 +"&to=" +t2;
     }
-
-
+    function myFunction() {
+      var number = "Truck Number " +truck_number();
+      document.getElementById("Truck_number").innerHTML = number;
+    }
 
     $(document).ready(function() {
         $('#sendBtn').click(function () {
             console.log("click");
             var provider_id = $('#provider_id').val();
-            const  str = 'http://localhost:8081' + truck_id()
+            const  str = 'http://3.123.232.208:8082' + truck_id()
             $.ajax({
                 url: str ,     //Your api url
                 type: 'PUT',   //type is any HTTP method
@@ -31,7 +37,6 @@
                 success: function () {
                 }
             })
-            window.setTimeout(updateChat, 1500);
         });
     });
 
@@ -40,15 +45,34 @@
   <head>
     <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
   </head>
-  <body>
-  <div class="contentBlock" style="top:200px ">
-	<h1>this is a generick truck room</h1>
+  <body onload="myFunction()">
+   <nav class="headNev">
+        <a class="headNevLink1" href="http://3.123.232.208:8082/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/health">Health </a>
+        <a class="headNevLink1" href="http://3.123.232.208:8082/providers">Providers</a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/rates">Rates</a>
+        <a class="headNevLink1" href="http://3.123.232.208:8082/trucks">Trucks </a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/bills">Bills </a>
+    </nav>
+  <div class="contentBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
+	<h2 id = "Truck_number"></h2>
+      <h3>To update the provider owning this truck, please enter its ID:</h3>
     <form  action="/api/"  >
       provider id:<input id="provider_id"  type="text" name="provider_id"  >
       <input id="sendBtn" type="button" value="submit">
     </form>
-      
+
+
+      <a hidden>Link <a href="" id=lnk> </a>
+  <br>
+   <h3> Please enter the wanted dates:</h3>
+  <input type='text' id='t1'/>
+  <input type='text' id='t2'/>
+  <input type='button' onclick='changeText2()' value='Enter' />
+    </a>
     </div>
-    <pre id="chatbox"> Please enter truck license plate and provider id </pre>
+  <div class="imageBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
+      <img src="../static/pngwing.com.png" alt="gan-shmuel" style="left : 1280px; position: relative;display: inline-block;height:350px;width:380px ">
+  </div>
   </body>
 </html>
