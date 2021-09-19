@@ -15,8 +15,8 @@
       var t1 = document.getElementById('t1').value;
       var t2 = document.getElementById('t2').value;
       var lnk = document.getElementById('lnk');
-      lnk.href = "http://3.123.232.208:8081" + truck_id() +"/?from=" +t1 +"&to=" +t2 ;
-      window.location = "http://3.123.232.208:8081" +truck_id() +"/?from=" +t1 +"&to=" +t2;
+      lnk.href = "http://3.123.232.208:8082" + truck_id() +"/?from=" +t1 +"&to=" +t2 ;
+      window.location = "http://3.123.232.208:8082" +truck_id() +"/?from=" +t1 +"&to=" +t2;
     }
     function myFunction() {
       var number = "Truck Number " +truck_number();
@@ -27,7 +27,7 @@
         $('#sendBtn').click(function () {
             console.log("click");
             var provider_id = $('#provider_id').val();
-            const  str = 'http://3.123.232.208:8081' + truck_id()
+            const  str = 'http://3.123.232.208:8082' + truck_id()
             $.ajax({
                 url: str ,     //Your api url
                 type: 'PUT',   //type is any HTTP method
@@ -47,12 +47,12 @@
   </head>
   <body onload="myFunction()">
    <nav class="headNev">
-        <a class="headNevLink1" href="http://3.123.232.208:8081/">  <i>Index</i></a>
-        <a class="headNevLink2" href="http://3.123.232.208:8081/health">Health </a>
-        <a class="headNevLink1" href="http://3.123.232.208:8081/providers">Providers</a>
-        <a class="headNevLink2" href="http://3.123.232.208:8081/rates">Rates</a>
-        <a class="headNevLink1" href="http://3.123.232.208:8081/trucks">Trucks </a>
-        <a class="headNevLink2" href="http://3.123.232.208:8081/bills">Bills </a>
+        <a class="headNevLink1" href="http://3.123.232.208:8082/">  <i>Index</i></a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/health">Health </a>
+        <a class="headNevLink1" href="http://3.123.232.208:8082/providers">Providers</a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/rates">Rates</a>
+        <a class="headNevLink1" href="http://3.123.232.208:8082/trucks">Trucks </a>
+        <a class="headNevLink2" href="http://3.123.232.208:8082/bills">Bills </a>
     </nav>
   <div class="contentBlock"  style="top:200px; left:70px; font-family: Arial, sans-serifserif;color: dimgray">
 	<h2 id = "Truck_number"></h2>

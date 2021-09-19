@@ -204,7 +204,7 @@ def trucktimes(truck_id):
         time2 = timeend.strftime("%Y%m%d%H%M%S")
 
     payload = {"from": time1, "to": time2}
-    res = requests.get(f"http://3.123.232.208:8083/item/{truck_id}", params=payload)
+    res = requests.get(f"http://3.123.232.208:8084/item/{truck_id}", params=payload)
     if res.text == "No data found":
         return Response({"404"}, status=404)
     return res.json()
@@ -255,14 +255,14 @@ def totalbill(provider_id):
     result = mycursor.fetchall()
     if result:
         for truck in result:
-            res = requests.get(f"http://3.123.232.208:8083/item/{truck[0]}", params=payload)
+            res = requests.get(f"http://3.123.232.208:8084/item/{truck[0]}", params=payload)
             if res.text != "No data found":
                 truck_counter += 1
                 sessions1 = res.json()
                 sessions=sessions1['sessions']
                 session_count += len(sessions)
                 for session in sessions:
-                    r_session = requests.get(f"http://3.123.232.208:8083/session/{session}").json()
+                    r_session = requests.get(f"http://3.123.232.208:8084/session/{session}").json()
                     product = r_session['product_name']
                     neto = int(r_session['neto'])
                     if product in product_dic:
