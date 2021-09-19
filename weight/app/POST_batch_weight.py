@@ -22,6 +22,7 @@ def POST_batch_weight(filename):
                 id = line.split(',')[0]
                 weight = int(line.split(',')[1])
                 data = (id, weight, unit)
+                return data
                 mySQL.setData(query, data)
                 
         # Lines for ---> json <--- files

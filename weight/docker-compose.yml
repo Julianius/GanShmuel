@@ -8,6 +8,8 @@ services:
     ports: 
       - ${DYNAMIC_PORT}:5000
       # - 8083:5000
+    volumes: 
+      - ${DYNAMIC_PATH_DB}/app/in:/in
   mysql:
     image: mysql:8
     volumes: 
