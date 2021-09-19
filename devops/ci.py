@@ -126,7 +126,7 @@ def health():
 @app.route("/myhook", methods=['POST'])
 def github_webhook_endpoint():
   data = request.get_json()
-  f = open(PATH_APP + 'dump.txt', 'a')
+  f = open(PATH_APP + 'dump.txt', 'w')
   text = str(data)
   f.write(text)
   f.close()
