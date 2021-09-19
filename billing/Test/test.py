@@ -115,12 +115,12 @@ def trucktest(provider_id):
         jsonfromtext = json.loads(linefromfile)
         payload = jsonfromtext['GET']
         truck_id = jsonfromtext['value']
-        URL = "http://3.123.232.208:8081/trucks/" + str(truck_id)+"/"
+        URL = "http://3.123.232.208:8085/trucks/" + str(truck_id)+"/"
         r = requests.get(url=URL, params=payload)
         testvalue = jsonfromtext['return']
         test = check(str(r.text), str(testvalue))
         if test == 1:
-            return "GET to http://3.123.232.208:8081/api/truck/<truck_id> test not good"
+            return "GET to http://3.123.232.208:8085/api/truck/<truck_id> test not good"
         # for line in range(18, 19, 1):  # test for get truck
         #     linefromfile = readtest[line].replace('valuetochange', str(provider_id))
         #     jsonfromtext = json.loads(linefromfile)
@@ -187,8 +187,8 @@ def main():
 
 
 testfile = True
-counter = 60
-URL = "http://3.123.232.208:8081/"
+counter = 180
+URL = "http://3.123.232.208:8085/"
 while testfile:
     try:
         res = requests.head(url=URL)
