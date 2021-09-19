@@ -10,6 +10,6 @@ for file in listfile:
     print(file)
     with open(f'templates/{file}', "r") as readchange:
         readit = readchange.read()
-        readit = readit.replace("localhost:8081", "18.157.175.199:"+str(int(sys.argv[1])))
+        readit = readit.replace("localhost:8081", "3.123.232.208:"+str(int(sys.argv[1])))
     with open(f'templates/{file}', "w") as readchange:
         readchange.write(readit)

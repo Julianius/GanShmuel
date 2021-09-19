@@ -108,8 +108,7 @@ def trucktest(provider_id):
             testvalue = jsonfromtext['return']
             test = check(str(r.text), str(testvalue))
             if test == 1:
-<<<<<<< HEAD:billing/Test/testyo.py
-                return "PUT to http://localhost:8085/trucks test not good"
+                return "PUT to https://localhost:8085/trucks test not good"
         for line in range(18, 19, 1):  # test for get truck
             linefromfile = readtest[line].replace('valuetochange', str(provider_id))
             jsonfromtext = json.loads(linefromfile)
@@ -128,27 +127,6 @@ def trucktest(provider_id):
                 test = check(str(r.text), str(testvalue))
             if test == 1:
                 return "GET to http://localhost:8085/api/truck/<truck_id> test not good"
-=======
-                return "PUT to http://localhost:8081/trucks test not good"
-        # for line in range(18, 19, 1):  # test for get truck
-        #     linefromfile = readtest[line].replace('valuetochange', str(provider_id))
-        #     jsonfromtext = json.loads(linefromfile)
-        #     payload = jsonfromtext['GET']
-        #     truck_id = jsonfromtext['value']
-        #     URL = "http://localhost:8081/trucks/" + str(truck_id)+"/"
-        #     r = requests.get(url=URL, params=payload)
-        #     if r.status_code == 200:
-        #         try:
-        #             r.json()
-        #             test = 0
-        #         except json.decoder.JSONDecodeError:
-        #             return "GET to http://localhost:8081/api/truck/<truck_id> test not good"
-        #     elif r.status_code == 404:
-        #         testvalue = jsonfromtext['return']
-        #         test = check(str(r.text), str(testvalue))
-        #     if test == 1:
-        #         return "GET to http://localhost:8081/api/truck/<truck_id> test not good"
->>>>>>> billing:billing/Test/oldtesfiles/checktest.py
         return 0
 def billtest(provider_id):
 
