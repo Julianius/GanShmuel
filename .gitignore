@@ -1,1 +1,4 @@
 devops/venv
+devops/__pycache__
+devops/helper.sh
+devops/monitor/__pycache__

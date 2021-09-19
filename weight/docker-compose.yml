@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+  app:
+    build: ./app
+    depends_on:
+      - mysql
+
+    ports: 
+      - ${DYNAMIC_PORT}:5000
+      # - 8083:5000
+  mysql:
+    image: mysql:8
+    volumes: 
+      - ${DYNAMIC_PATH_DB}/mysql-db:/docker-entrypoint-initdb.d 
+      # - "./mysql-db/one-db.sql:/docker-entrypoint-initdb.d/one-db.sql"
+    environment: 
+      - MYSQL_ROOT_PASSWORD=123456
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
