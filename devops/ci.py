@@ -58,7 +58,7 @@ def build_app(data):
       elif cur == BILLING:
         send_email(BILLING + ' ' + HEADING_FAILURE, MESSAGE_FAILURE, team_lead_email, pusher_email)
         pass
-      #return 1
+
     else:
       if cur == WEIGHT:
         send_email(WEIGHT + ' ' + HEADING_SUCCESS, MESSAGE_SUCCESS, team_lead_email, pusher_email)
