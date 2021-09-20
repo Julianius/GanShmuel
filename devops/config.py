@@ -41,9 +41,14 @@ TEST_APPS_PATHS = {
 }
 
 HEADING_SUCCESS = 'team tests success'
-MESSAGE_SUCCESS = 'All tests passedd successfully! System is running and operational.'
+MESSAGE_SUCCESS = 'All tests passedd successfully!'
 HEADING_FAILURE = 'team tests failure'
 MESSAGE_FAILURE = 'Some tests have failed. Please check!'
+
+HEADING_SUCCESS_DEPLOY = 'team deploy success'
+MESSAGE_SUCCESS_DEPLOY = 'System has been deployed successfully! System is running and operational.'
+HEADING_FAILURE_DEPLOY = 'team deploy failure'
+MESSAGE_FAILURE_DEPLOY = 'System was not deployed successfully. Please check!'
 
 CONTACT_EMAILS = {
     "weight_team": {

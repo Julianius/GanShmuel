@@ -30,7 +30,7 @@ def run_tests(branch_name, merger_name):
     os.system('mkdir -p ' + PATH_TEST + branch_name)
     print('cp -a '+ PATH_APP + 'temp/* ' + PATH_APP + 'temp/.* ' + PATH_TEST + branch_name + '/ 2>/dev/null')
     os.system('cp -a '+ PATH_APP + 'temp/* ' + PATH_APP + 'temp/.* ' + PATH_TEST + branch_name + '/ 2>/dev/null')
-
+    test_result = FAILURE_CODE
     print(BRANCHES_ALLOWED[0])
     print(BRANCHES_ALLOWED[1])
     print(BRANCHES_ALLOWED[2])
@@ -57,7 +57,7 @@ def run_tests(branch_name, merger_name):
     return test_result  
 
 def billing_test():
-    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/testyo.py')
+    res = os.system('python3 ' + PATH_TEST + BRANCHES_ALLOWED[2] + '/billing/Test/test.py')
     #res = 0
     if res == SUCCESS_CODE:
         return SUCCESS_CODE
